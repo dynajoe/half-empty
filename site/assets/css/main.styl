@@ -4,8 +4,15 @@ html
    font-size 100%
    padding 20px
    background-color #ccc
+
 body
    padding 20px
+   font-family 'Molengo', serif
+
+.container
+   max-width 1000px
+   margin 0 auto
+
 h1 
    font-size 3em
    margin-bottom 1em
@@ -76,22 +83,19 @@ h1
    margin 0 auto
 
    .header
-      background-color white
-      border-radius 5px
-      width 101%
       margin 0 auto
-
+      overflow hidden
+      padding 5px
       .profile
          position relative
-         height 100px
+
          img
             border-radius 5px
-            position absolute
-            left -10px
-            top -13px
+            float left
+            margin-right 15px
 
          .details
-            padding-left 130px
+            float left
             padding-right 120px
 
             .name 
@@ -104,24 +108,22 @@ h1
                margin-left 15px
             .bio
                color #666
-               margin-left 15px
                display block
                margin-top 5px
-            .score
-               height 100%
-               border-radius 5px
-               position absolute
-               right 0px
-               top 0px
-               color white
-               width 100px
-               text-align center
-               font-weight bold
-               font-size 3.5em
-               line-height 100px
-               font-family arial
-               text-shadow 0px 2px 6px #888
-               background-image url('/images/noisy.png')
+         
+         .score
+            padding 10px
+            margin 5px
+            border-radius 5px
+            position absolute
+            right 0px
+            color white
+            text-align center
+            font-weight bold
+            font-size 3.5em
+            font-family arial
+            text-shadow 0px 2px 6px #888
+            background-image url('/images/noisy.png')
    .content
       margin-top 30px
       .graphs

@@ -1,59 +1,5 @@
 extends layout
-block scripts
-   script(type="text/javascript")
-      var showUserNotFound = function () {
-
-      };
-
-      var populateData = function (data) {
-         if (!data) {
-            showUserNotFound();
-            return;
-         }
-
-         $('#gather').fadeOut('slow');
-         $('#data').fadeIn('slow');
-
-         $('#data .score').html('86');
-         var user = data[0].user;
-         console.log(user)
-         $('#data .bio').html(user.description);
-         $('#data .location').html(user.location);
-         $('#data .name').html(user.name);
-         $('img').attr('src', user.profile_image_url.replace(/_normal/, ''));         
-         
-         for (var i = 0; i < data.length; i++) {
-            var tweet = data[i];
-            var s = tweet.sentiment;
-            var score = s.score || 'neutral';
-
-            $('.tweets ul').append('<li class="' + s.type +'">' + tweet.text +'</li>');
-         }
-      };
-
-      $(document).ready(function () {
-         $('#gather form').submit(function (e) {
-            e.preventDefault();
-            
-            $this = $(this);
-            
-            var getData = function () {
-               $('.form').addClass('hide');
-                     
-               $.get('/analyze/' + $('input[name=twitter_handle]').val(), function (data) {
-                  if (data.processing) {
-                     setTimeout(getData, 500);
-                  } else {
-                     populateData(data);
-                  }
-               });
-            };
-            getData();
-         });
-
-        $('input[name=twitter_handle]').val('smerchek');
-        $('#gather form').submit();
-      });
+      
 block content
    #gather
       .pane.form
@@ -75,7 +21,7 @@ block content
                span.name
                span.location
                span.bio
-               span.score
+            span.score
       .content
          .graphs
             .last90

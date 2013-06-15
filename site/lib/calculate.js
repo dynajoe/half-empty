@@ -41,7 +41,7 @@ module.exports.scoreFromDate = scoreFromDate = function(fromDate, tweets) {
    };
    console.log("Sum: " + sum);
    return { 
-      overallScore: sum / count,
+      overallScore: Math.round((sum / count) * 100),
       positiveInfluencers: positiveInfluencers,
       negativeInfluencers: negativeInfluencers
    };
