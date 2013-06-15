@@ -1,14 +1,33 @@
-var moment = require('moment');
+var moment = require('moment')
+  , _ = require('underscore');
 
 module.exports.score = function(tweets) {
    var sum = 0;
    var count = 0;
+   // var positiveInfluencers = [];
+   // var positiveBar = 0;
+   // var negativeInfluencers = [];
+   // var negativeBar = 0;
+
    for (var i = tweets.length - 1; i >= 0; i--) {
-      sum += getTweetScore(tweets[i]);
+      var tweetScore = getTweetScore(tweets[i]);
+      // if (tweetScore > 0 && (tweetScore > positiveBar || positiveInfluencers.length < 10)) {
+      //    positiveInfluencers.push({ id: tweets[i].id_str, score: tweetScore, sentiment: tweets[i].sentiment });
+      //    positiveBar = positiveInfluencers.length < 10 ? 0 : _.min(positiveInfluencers, function(tweet) { return tweet.calculatedScore });
+      // }
+      // else if (tweetScore < 0 && (tweetScore < negativeBar || negativeInfluencers.length < 10)) {
+      //    negativeInfluencers.push({ id: tweets[i].id_str, score: tweetScore, sentiment: tweets[i].sentiment });
+      //    negativeBar = negativeInfluencers.length < 10 ? 0 : _.min(negativeInfluencers, function(tweet) { return tweet.calculatedScore });
+      // }
+      sum += tweetScore;
       count++;
    };
    console.log("Sum: " + sum);
-   return { overallScore: sum / tweets.length };
+   return { 
+      overallScore: sum / tweets.length
+      // positiveInfluencers: positiveInfluencers,
+      // negativeInfluencers: negativeInfluencers
+   };
 }
 
 function getTweetScore(tweet) {

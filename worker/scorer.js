@@ -1,7 +1,6 @@
 var ironio = require('node-ironio')('nfFVh41-R6ZkFU0SzGOgzJM9JCk')
   , project = ironio.projects('51bbd144ed3d766cf3000ab6')
   , twitterCache = project.caches('twitter')
-  , scoreCache = project.caches('score')
   , request = require('request')
   , twitter = require('./lib/twitter')
   , alchemy = require('./lib/alchemy');
@@ -44,14 +43,6 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
                }
             }, null, 2));
          };
-         var score = require('./lib/calculate').score(analyzedTweets);
-         scoreCache.put(payload.handle, JSON.stringify(score), function(err, msg) {
-            if(err) {
-               console.error('Failed to put to cache. ', err);
-               process.exit(1);
-            }
-            console.log('Successfully stored ' + payload.handle + '\'s score (' + score.overallScore.toFixed(3) + ') ' + JSON.stringify(msg));
-         });
          twitterCache.put(payload.handle, JSON.stringify(tweets), function(err, msg) {
             if(err) {
                console.error('Failed to put to cache. ', err);

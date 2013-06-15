@@ -1,4 +1,3 @@
-
 var twitter = require('ntwitter');
 
 var twit = new twitter({
