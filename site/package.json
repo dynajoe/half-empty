@@ -13,6 +13,7 @@
     "express": "~3.2.6",
     "jade": "~0.31.2",
     "connect-assets": "~2.4.3",
-    "stylus": "~0.32.1"
+    "stylus": "~0.32.1",
+    "underscore": "~1.4.4"
   }
 }

@@ -3,7 +3,7 @@
 html
    font-size 100%
    padding 20px
-   background-image url('/images/noisy-bg.png')
+   background-color #ccc
 h1 
    font-size 3em
    margin-bottom 1em
@@ -19,6 +19,7 @@ h1
    border-radius 5px
    box-shadow 0px 2px 6px #888
    overflow hidden
+
    .pane
       height 100px
       padding 10px
@@ -68,6 +69,69 @@ h1
       -webkit-transition color 500ms ease-out
       &:hover
          color blue
+#data
+   display none
+   margin 0 auto
+
+   .header
+      background-color white
+      border-radius 5px
+      height 80px
+      
+      .profile
+         padding 20px
+         float left
+
+         img
+            float left
+            margin-top -43px
+            margin-left -10px
+            border 1px solid #444
+            background-color white
+            border-radius 5px
+            box-shadow 0px 2px 6px #888
+         h2
+            float left
+            margin-left 20px
+            font-size 2.5em
+      .score
+         color white
+         height 80px
+         width 120px
+         text-align center
+         font-weight bold
+         font-size 3.5em
+         line-height 80px
+         font-family arial
+         text-shadow 0px 2px 6px #888
+         float right
+         background-image url('/images/noisy.png')
+   .content
+      clear both
+      .graphs
+         div
+            height 150px
+            background-color white
+            margin-bottom 20px
+      .tweets
+         float left
+         width 50%
+            
+         ul 
+            background-color white
+         li
+            color #444
+            margin-bottom 5px
+            padding 10px
+            border-radius 4px
+            box-shadow 0px 2px 6px #eee
+            background-color white
+
+            &.negative
+               background-color red
+
+            &.positive
+               background-color green
 
 @-webkit-keyframes slideout
    0% {
