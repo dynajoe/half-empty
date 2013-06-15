@@ -6,7 +6,7 @@ var setUser = function (user) {
    $('#data .bio').html(user.description);
    $('#data .location').html(user.location);
    $('#data .name').html(user.name);
-   $('img').attr('src', user.profile_image_url.replace(/_normal/, ''));         
+   $('#data img.avatar').attr('src', user.profile_image_url.replace(/_normal/, ''));         
 };
 
 var createTweet = function (tweet) {
@@ -30,7 +30,8 @@ var setScore = function (score) {
 };
 
 var populateData = function (data) {
-   if (!data) {
+
+   if (!data.user) {
       showUserNotFound();
       return;
    }  
@@ -63,6 +64,7 @@ $(document).ready(function () {
             }
          });
       };
+      
       getData();
    });
 
