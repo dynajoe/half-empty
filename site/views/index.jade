@@ -16,8 +16,11 @@ block scripts
 
          $('#data .score').html('86');
          var user = data[0].user;
+         console.log(user)
+         $('#data .bio').html(user.description);
+         $('#data .location').html(user.location);
          $('#data .name').html(user.name);
-         $('#data .avatar').attr('src', user.profile_image_url.replace(/_normal/, ''));         
+         $('img').attr('src', user.profile_image_url.replace(/_normal/, ''));         
          
          for (var i = 0; i < data.length; i++) {
             var tweet = data[i];
@@ -48,8 +51,8 @@ block scripts
             getData();
          });
 
-         $('input[name=twitter_handle]').val('smerchek');
-         $('#gather form').submit();
+        $('input[name=twitter_handle]').val('smerchek');
+        $('#gather form').submit();
       });
 block content
    #gather
@@ -67,15 +70,20 @@ block content
    #data 
       .header
          .profile
-            img(width=125).avatar
-            h2 Scott Smerchek
-         .score
+            .details
+               img(width=125)
+               span.name
+               span.location
+               span.bio
+               span.score
       .content
          .graphs
             .last90
-               
          .tweets.positive
-            h3 pos
-            ul
+            .wrapper   
+               h3 Positive Impact
+               ul
          .tweets.negative
-            h3 neg
+            .wrapper
+               h3 Negative Impact
+               ul
