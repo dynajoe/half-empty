@@ -18,7 +18,13 @@ function analyzeTweet(tweet, cb) {
       json: true
    }, function(err, res, data) {
       if (err) return cb(err);
-      tweet.sentiment = data.docSentiment;
+      if (data.status == "ERROR") {
+         tweet.sentiment = { type: "neutral" };
+      }
+      else {
+         tweet.sentiment = data.docSentiment;
+      }
+      
       return cb(null, tweet);
    });
 }
