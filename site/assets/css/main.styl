@@ -1,0 +1,58 @@
+@import mixins
+
+html
+   font-size 100%
+   padding 20px
+   background-image url('/images/noisy-bg.png')
+h1 
+   font-size 3em
+   margin-bottom 1em
+   color #444
+   font-family lobster
+#gather
+   background-image url('/images/noisy.png')
+   padding 10px
+   width 500px
+   margin 0 auto
+   border-radius 5px
+   box-shadow 0px 2px 6px #888
+   overflow hidden
+
+   label
+      display block
+      background-image url('/images/twitter-logo.svg')
+      background-size 70px 70px
+      background-repeat no-repeat
+      background-position 0px 0px
+      overflow hidden
+      text-indent -999px
+
+   input[type=text]
+      margin-top 15px
+      border 1px solid white
+      font-size 2em
+      border-radius 5px
+      width 82%
+      -webkit-transition border 500ms ease-out
+      float right
+      &:focus
+         border 1px solid blue
+
+   button
+      float right
+      clear both
+      margin-top 10px
+      font-size 1.5em
+      border-radius 2px
+      border none
+      background none
+      color white
+      text-decoration underline
+      -webkit-transition color 500ms ease-out
+      &:hover
+         color blue
+
+
+
+
+

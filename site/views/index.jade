@@ -1,4 +1,8 @@
 extends layout
 
 block content
-   #poop
+   form#gather(method='get', action="/analyze")
+      fieldset 
+         label Twitter:
+            input(type="text", placeholder="twitter handle")
+         button(type="submit") Get Started
