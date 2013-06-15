@@ -13,6 +13,7 @@
     "node-ironio": "~0.3.1",
     "request": "~2.21.0",
     "ntwitter": "~0.5.0",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "moment": "~2.0.0"
   }
 }
