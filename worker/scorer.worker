@@ -1,0 +1,5 @@
+runtime "node"
+exec "scorer.js"
+dir "node_modules"
+file "package.json"
+dir "lib"
