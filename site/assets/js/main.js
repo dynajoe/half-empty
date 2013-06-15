@@ -9,6 +9,10 @@ var setUser = function (user) {
    $('img').attr('src', user.profile_image_url.replace(/_normal/, ''));         
 };
 
+var createTweet = function (tweet) {
+   return tweet;
+};
+
 var setTweets = function (selector, data) {
    var $container = $(selector);
 
@@ -17,8 +21,12 @@ var setTweets = function (selector, data) {
       var s = tweet.sentiment;
       var score = s.score || 'neutral';
 
-      $container.append('<li class="' + s.type +'">' + tweet.text +'</li>');
+      $container.append('<li class="' + s.type +'">' + createTweet(tweet.text) +'</li>');
    }
+};
+
+var setScore = function (score) {
+   $('#data .score').html(score);
 };
 
 var populateData = function (data) {
@@ -29,8 +37,8 @@ var populateData = function (data) {
 
    $('#gather').fadeOut('slow');
    $('#data').fadeIn('slow');
-   $('#data .score').html(data.scored.overallScore);
 
+   setScore(data.scored.overallScore);
    setUser(data.user);
    setTweets('.positive ul', data.scored.positiveInfluencers);
    setTweets('.negative ul', data.scored.negativeInfluencers);
