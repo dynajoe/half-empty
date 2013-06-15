@@ -11,7 +11,7 @@ module.exports.analyzeTweets = function(tweets, cb) {
 function analyzeTweet(tweet, cb) {
    request.post('http://access.alchemyapi.com/calls/text/TextGetTextSentiment', {
       form: {  
-         apikey: '435de1c638f3743fec343bc8e7df8e088c0581e7', 
+         apikey: 'a06ca02ad7c2e23ce1f35792825c902d5e48e4ef', 
          outputMode: 'json',
          text: tweet.text
       },
