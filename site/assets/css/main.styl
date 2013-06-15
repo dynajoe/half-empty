@@ -4,6 +4,8 @@ html
    font-size 100%
    padding 20px
    background-color #ccc
+body
+   padding 20px
 h1 
    font-size 3em
    margin-bottom 1em
@@ -76,62 +78,80 @@ h1
    .header
       background-color white
       border-radius 5px
-      height 80px
-      
-      .profile
-         padding 20px
-         float left
+      width 101%
+      margin 0 auto
 
+      .profile
+         position relative
+         height 100px
          img
-            float left
-            margin-top -43px
-            margin-left -10px
-            border 1px solid #444
-            background-color white
             border-radius 5px
-            box-shadow 0px 2px 6px #888
-         h2
-            float left
-            margin-left 20px
-            font-size 2.5em
-      .score
-         color white
-         height 80px
-         width 120px
-         text-align center
-         font-weight bold
-         font-size 3.5em
-         line-height 80px
-         font-family arial
-         text-shadow 0px 2px 6px #888
-         float right
-         background-image url('/images/noisy.png')
+            position absolute
+            left -10px
+            top -13px
+
+         .details
+            padding-left 130px
+            padding-right 120px
+
+            .name 
+               font-size 2.5em
+               display block
+               
+            .location
+               font-size 1em
+               display block
+               margin-left 15px
+            .bio
+               color #666
+               margin-left 15px
+               display block
+               margin-top 5px
+            .score
+               height 100%
+               border-radius 5px
+               position absolute
+               right 0px
+               top 0px
+               color white
+               width 100px
+               text-align center
+               font-weight bold
+               font-size 3.5em
+               line-height 100px
+               font-family arial
+               text-shadow 0px 2px 6px #888
+               background-image url('/images/noisy.png')
    .content
-      clear both
+      margin-top 30px
       .graphs
          div
             height 150px
             background-color white
+            margin 5px
             margin-bottom 20px
+            border-radius 5px
+
       .tweets
          float left
          width 50%
-            
-         ul 
+         .wrapper
             background-color white
+            padding 10px
+            margin 5px
+            border-radius 5px
+            h3 
+               font-size 1.4em
+               border-bottom 1px solid #888
+               padding 5px
+               padding-bottom 10px
+               margin-bottom 5px
          li
             color #444
             margin-bottom 5px
             padding 10px
-            border-radius 4px
-            box-shadow 0px 2px 6px #eee
             background-color white
-
-            &.negative
-               background-color red
-
-            &.positive
-               background-color green
+            border-bottom 1px solid #eee
 
 @-webkit-keyframes slideout
    0% {
