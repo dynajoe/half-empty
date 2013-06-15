@@ -1,11 +1,17 @@
 var moment = require('moment')
   , _ = require('underscore');
 
-module.exports.scoreHistory = function(numberOfDays) {
-   
-   for (var i = 0; i < numberOfDays; i++) {
-      
+module.exports.scoreHistory = function(numberOfDays, tweets) {
+   var scoresOverTime = [];
+   for (var i = numberOfDays - 1; i >= 0; i--) {
+      var date = moment().subtract('days', i);
+      var score = scoreFromDate(date, tweets);
+      scoresOverTime.push({
+         date: date,
+         score: score.overallScore
+      });
    };
+   return scoresOverTime;
 }
 
 module.exports.score = function(tweets) {

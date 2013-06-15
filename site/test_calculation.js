@@ -7,5 +7,6 @@ var twitter_handle = 'smerchek';
       
 cache.get(twitter_handle, function (err, data) {
    //console.log(JSON.stringify(require('./lib/calculate').score(JSON.parse(data)).overallScore, null, 2));
-   console.log(JSON.stringify(require('./lib/calculate').scoreFromDate(moment().subtract('days', 90), JSON.parse(data)).overallScore, null, 2));
+   //console.log(JSON.stringify(require('./lib/calculate').scoreFromDate(moment().subtract('days', 90), JSON.parse(data)).overallScore, null, 2));
+   console.log(JSON.stringify(require('./lib/calculate').scoreHistory(90, JSON.parse(data)), null, 2));
 });
