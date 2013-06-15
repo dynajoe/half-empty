@@ -4,30 +4,40 @@ var moment = require('moment')
 module.exports.score = function(tweets) {
    var sum = 0;
    var count = 0;
-   // var positiveInfluencers = [];
-   // var positiveBar = 0;
-   // var negativeInfluencers = [];
-   // var negativeBar = 0;
+   var positiveInfluencers = [];
+   var negativeInfluencers = [];
 
    for (var i = tweets.length - 1; i >= 0; i--) {
       var tweetScore = getTweetScore(tweets[i]);
-      // if (tweetScore > 0 && (tweetScore > positiveBar || positiveInfluencers.length < 10)) {
-      //    positiveInfluencers.push({ id: tweets[i].id_str, score: tweetScore, sentiment: tweets[i].sentiment });
-      //    positiveBar = positiveInfluencers.length < 10 ? 0 : _.min(positiveInfluencers, function(tweet) { return tweet.calculatedScore });
-      // }
-      // else if (tweetScore < 0 && (tweetScore < negativeBar || negativeInfluencers.length < 10)) {
-      //    negativeInfluencers.push({ id: tweets[i].id_str, score: tweetScore, sentiment: tweets[i].sentiment });
-      //    negativeBar = negativeInfluencers.length < 10 ? 0 : _.min(negativeInfluencers, function(tweet) { return tweet.calculatedScore });
-      // }
+      tweets[i].score = tweetScore;
+      if (tweetScore > 0) {
+         positiveInfluencers = updateInfluencers(positiveInfluencers, tweets[i], tweetScore);
+      }
+      if (tweetScore < 0) {
+         negativeInfluencers = updateInfluencers(negativeInfluencers, tweets[i], tweetScore);
+      }
+
       sum += tweetScore;
       count++;
    };
    console.log("Sum: " + sum);
    return { 
-      overallScore: sum / tweets.length
-      // positiveInfluencers: positiveInfluencers,
-      // negativeInfluencers: negativeInfluencers
+      overallScore: sum / tweets.length,
+      positiveInfluencers: positiveInfluencers,
+      negativeInfluencers: negativeInfluencers
    };
+}
+
+function updateInfluencers(influencers, tweet, score) {
+   if (influencers.length < 10) {
+      influencers.push(tweet);
+   }
+   else if (Math.abs(score) > Math.abs(_.last(influencers).score)) {
+      influencers.pop();
+      influencers.push(tweet);
+   }
+
+   return _.sortBy(influencers, function(tweet) { return Math.abs(tweet.score) * -1; });
 }
 
 function getTweetScore(tweet) {
@@ -75,6 +85,7 @@ function getReach(tweet) {
 }
 
 function getSentimentScore(tweet) {
+   if (!tweet.sentiment) console.log(JSON.stringify(tweet, null, 2));
    if (tweet.sentiment.type === 'neutral') return 0;
    return parseFloat(tweet.sentiment.score);
 }
