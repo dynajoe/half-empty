@@ -18,8 +18,21 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
    }
    twitter.getTweets(payload.handle, function(err, tweets) {
       if(err) {
-         console.error('Failed to retrieve tweets for user: ' + payload.handle, err);
-         process.exit(1);
+         if (err.statusCode == 404) {
+            cache.put(payload.handle, 'null', function(err, msg) {
+               if(err) {
+                  console.error('Failed to put to cache. ', err);
+                  process.exit(1);
+               }
+               console.log('Twitter user \'' + payload.handle + '\' doesn\'t exist, but we were successful anyway.' + JSON.stringify(msg));
+               process.exit(0);
+            })
+         }
+         else {
+            console.error('Failed to retrieve tweets for user: ' + payload.handle, err);
+            process.exit(1);
+         }
+         return;
       }
       alchemy.analyzeTweets(tweets, function(err, analyzedTweets) {
          if(err) {
