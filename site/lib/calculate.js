@@ -1,14 +1,33 @@
 var moment = require('moment')
   , _ = require('underscore');
 
+module.exports.scoreHistory = function(numberOfDays, tweets) {
+   var scoresOverTime = [];
+   for (var i = numberOfDays - 1; i >= 0; i--) {
+      var date = moment().subtract('days', i);
+      var score = scoreFromDate(date, tweets);
+      scoresOverTime.push({
+         date: date,
+         score: score.overallScore
+      });
+   };
+   return scoresOverTime;
+}
+
 module.exports.score = function(tweets) {
+   return scoreFromDate(moment(), tweets);
+}
+
+module.exports.scoreFromDate = scoreFromDate = function(fromDate, tweets) {
    var sum = 0;
    var count = 0;
    var positiveInfluencers = [];
    var negativeInfluencers = [];
 
    for (var i = tweets.length - 1; i >= 0; i--) {
-      var tweetScore = getTweetScore(tweets[i]);
+      var age = getAge(fromDate, tweets[i]);
+      if (age < 0) continue;
+      var tweetScore = getTweetScore(fromDate, tweets[i]);
       tweets[i].score = tweetScore;
       if (tweetScore > 0) {
          positiveInfluencers = updateInfluencers(positiveInfluencers, tweets[i], tweetScore);
@@ -22,7 +41,7 @@ module.exports.score = function(tweets) {
    };
    console.log("Sum: " + sum);
    return { 
-      overallScore: Math.round((sum / tweets.length) * 100),
+      overallScore: Math.round((sum / count) * 100),
       positiveInfluencers: positiveInfluencers,
       negativeInfluencers: negativeInfluencers
    };
@@ -40,8 +59,8 @@ function updateInfluencers(influencers, tweet, score) {
    return _.sortBy(influencers, function(tweet) { return Math.abs(tweet.score) * -1; });
 }
 
-function getTweetScore(tweet) {
-   var age = getAge(tweet);
+function getTweetScore(fromDate, tweet) {
+   var age = getAge(fromDate, tweet);
    var ageFactor = getAgeFactor(age);
    var factorRT = Math.pow(.25, isRT(tweet));
    var factorReply = Math.pow(1.25, isReply(tweet));
@@ -55,8 +74,8 @@ function getTweetScore(tweet) {
    return score;
 }
 
-function getAge(tweet) {
-   return moment().diff(moment(tweet.created_at), 'days', true);
+function getAge(fromDate, tweet) {
+   return fromDate.diff(moment(tweet.created_at), 'days', true);
 }
 
 function getAgeFactor(ageInDays) {
