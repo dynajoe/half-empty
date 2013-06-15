@@ -11,7 +11,7 @@ var twit = new twitter({
 module.exports.getTweets = function(handle, cb) {
    twit.getUserTimeline({
       screen_name: handle,
-      count: 10
+      count: 100
    }, function(err, data) {
       if (err) return cb(err);
 
