@@ -10,6 +10,8 @@
   "author": "Scott Smerchek",
   "license": "MIT",
   "dependencies": {
-    "node-ironio": "~0.3.1"
+    "node-ironio": "~0.3.1",
+    "request": "~2.21.0",
+    "ntwitter": "~0.5.0"
   }
 }
