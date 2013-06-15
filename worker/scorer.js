@@ -27,6 +27,12 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
       screen_name: payload.handle,
       count: 5
    }, function(err, data) {
-      console.log(JSON.stringify(data, null, 2));
+      cache.put(payload.handle, JSON.stringify(data), function(err, msg) {
+         if(err) {
+            console.error('Failed to put to cache. ', err);
+            process.exit(1);
+         }
+         console.log('Successfully stored ' + payload.handle + '\'s tweets! ' + JSON.stringify(msg));
+      });
    });
 });
