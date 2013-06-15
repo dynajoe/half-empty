@@ -26,6 +26,15 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
             console.error('Failed to analyze tweets for user: ' + payload.handle, err);
             process.exit(1);
          }
+         for (var i = analyzedTweets.length - 1; i >= 0; i--) {
+            console.log(JSON.stringify({ 
+               tweet: {
+                  text: analyzedTweets[i].text,
+                  sentiment: analyzedTweets[i].sentiment
+               }
+            }, null, 2));
+         };
+         
          cache.put(payload.handle, JSON.stringify(tweets), function(err, msg) {
             if(err) {
                console.error('Failed to put to cache. ', err);
