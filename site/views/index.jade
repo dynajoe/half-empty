@@ -1,8 +1,81 @@
 extends layout
+block scripts
+   script(type="text/javascript")
+      var showUserNotFound = function () {
 
+      };
+
+      var populateData = function (data) {
+         if (!data) {
+            showUserNotFound();
+            return;
+         }
+
+         $('#gather').fadeOut('slow');
+         $('#data').fadeIn('slow');
+
+         $('#data .score').html('86');
+         var user = data[0].user;
+         $('#data .name').html(user.name);
+         $('#data .avatar').attr('src', user.profile_image_url.replace(/_normal/, ''));         
+         
+         for (var i = 0; i < data.length; i++) {
+            var tweet = data[i];
+            var s = tweet.sentiment;
+            var score = s.score || 'neutral';
+
+            $('.tweets ul').append('<li class="' + s.type +'">' + tweet.text +'</li>');
+         }
+      };
+
+      $(document).ready(function () {
+         $('#gather form').submit(function (e) {
+            e.preventDefault();
+            
+            $this = $(this);
+            
+            var getData = function () {
+               $('.form').addClass('hide');
+                     
+               $.get('/analyze/' + $('input[name=twitter_handle]').val(), function (data) {
+                  if (data.processing) {
+                     setTimeout(getData, 500);
+                  } else {
+                     populateData(data);
+                  }
+               });
+            };
+            getData();
+         });
+
+         $('input[name=twitter_handle]').val('smerchek');
+         $('#gather form').submit();
+      });
 block content
-   form#gather(method='get', action="/analyze")
-      fieldset 
-         label Twitter:
-            input(type="text", placeholder="twitter handle")
-         button(type="submit") Get Started
+   #gather
+      .pane.form
+         form(method='get', action="/analyze")
+            fieldset 
+               label Twitter:
+                  input(name="twitter_handle", type="text", placeholder="twitter handle")
+               button(type="submit") Get Started
+      .pane.analyzing
+         .loading
+            .circle
+            .circle1
+            p Analyzing...
+   #data 
+      .header
+         .profile
+            img(width=125).avatar
+            h2 Scott Smerchek
+         .score
+      .content
+         .graphs
+            .last90
+               
+         .tweets.positive
+            h3 pos
+            ul
+         .tweets.negative
+            h3 neg
