@@ -22,7 +22,7 @@ module.exports.score = function(tweets) {
    };
    console.log("Sum: " + sum);
    return { 
-      overallScore: sum / tweets.length,
+      overallScore: Math.round((sum / tweets.length) * 100),
       positiveInfluencers: positiveInfluencers,
       negativeInfluencers: negativeInfluencers
    };
