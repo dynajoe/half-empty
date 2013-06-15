@@ -1,8 +1,38 @@
 extends layout
+block scripts
+   script(type="text/javascript")
+      var populateData = function (data) {
+         console.log(data);
+      };
 
+      $(document).ready(function () {
+         $('#gather form').submit(function (e) {
+            e.preventDefault();
+            $this = $(this);
+            $('.pane.form').addClass('hide');
+
+            var getData = function () {
+               $.get($this.attr('action'), function (data) {
+                  if (data.processing) {
+                     setTimeout(getData, 500);
+                  } else {
+                     populateData(data);
+                  }
+               });
+            };
+         });
+      });
 block content
-   form#gather(method='get', action="/analyze")
-      fieldset 
-         label Twitter:
-            input(type="text", placeholder="twitter handle")
-         button(type="submit") Get Started
+   #gather
+      .pane.form
+         form(method='get', action="/analyze")
+            fieldset 
+               label Twitter:
+                  input(name="twitter_handle", type="text", placeholder="twitter handle")
+               button(type="submit") Get Started
+      .pane.analyzing
+         
+         .loading
+            .circle
+            .circle1
+            p Analyzing...
