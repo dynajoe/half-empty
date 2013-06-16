@@ -19,6 +19,35 @@ h1
    color #444
    font-family lobster
 
+#gather-wrapper
+   -webkit-transition margin 500ms ease-out
+   margin-bottom 60px
+   
+   &.hide
+      margin-top -245px
+      
+      #start-over
+         opacity 1
+         margin-top 0px
+         
+   #start-over
+      opacity 0
+      margin 0 auto
+      margin-top 5px
+      text-align center
+      width 200px
+      background-image url('/images/noisy.png')
+      border-radius 5px
+      height 50px
+      z-index 100
+      color white
+      line-height 50px
+      -webkit-transition opacity 500ms ease-out 500ms
+      font-size 2em
+      margin-top -10000px
+      a
+         color white
+
 #gather
    background-image url('/images/noisy.png')
    position relative
@@ -33,9 +62,10 @@ h1
       height 100px
       padding 10px
       margin-bottom 30px
+      -webkit-transition margin 500ms ease-out
 
       &.form.hide 
-         -webkit-animation slideout 500ms cubic-bezier(.18,1.14,1,1.2) forwards
+         margin-top -150px
       
       &.analyzing
          text-align center
@@ -44,6 +74,7 @@ h1
          .loading
             height 25px
             margin-top 25px
+
 
    label
       display block
@@ -79,8 +110,12 @@ h1
       &:hover
          color blue
 #data
-   display none
    margin 0 auto
+   -webkit-transition opacity 500ms ease-out
+   opacity 1
+
+   &.hide
+      opacity 0
 
    .header
       margin 0 auto
@@ -182,11 +217,3 @@ h1
             border-bottom 1px solid #eee
 .clear
    clear both
-
-@-webkit-keyframes slideout
-   0% {
-      margin-top 0px
-   }
-   100% {
-      margin-top -150px;
-   }
