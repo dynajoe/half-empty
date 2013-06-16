@@ -146,7 +146,7 @@ var createBubble = function(bubble) {
       enabled: false
     },
     title: {
-        text: 'Score over time, wrt Sentiment Weight'
+        text: 'Tweets Over Time'
     },
 
     xAxis: {
@@ -159,14 +159,23 @@ var createBubble = function(bubble) {
 
     yAxis: {
         startOnTick: false,
-        endOnTick: false
+        endOnTick: false,
+        title: {
+          text: 'Contributing Score'
+        }
     },
-
+    plotOptions: {
+      bubble: {
+        maxSize: '15%',
+        tooltip: {
+          headerFormat: '',
+          pointFormat: '<span style="font:10px">{point.tweetText}</span><br/><span style="color:{point.color}">Score</span>: <b>{point.prettyScore}</b><br/><span style="color:{point.color}">Sentiment</span>: <b>{point.sentimentScore}</b><br/>'
+        }
+      }
+    },
     series: [{
         data: bubble,
-        displayNegative: true,
         color: '#319638',
-        negativeColor: '#BD140E'
         // zThreshold: 0
     }]
 
