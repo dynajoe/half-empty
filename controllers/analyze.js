@@ -43,6 +43,8 @@ module.exports = function (app) {
             if (parsed && parsed.tweets) {
                var user = parsed.user;
                var tweets = parsed.tweets;
+               
+               console.log('Crunching ' + tweets.length + ' for ' + twitter_handle);
 
                async.parallel([
                   function (cb) { peerindex.getTopics(twitter_handle, cb); },
