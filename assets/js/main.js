@@ -85,7 +85,7 @@ var createChart = function (history) {
    console.log("Data: " + history.data);
    $('.last90').highcharts({
       chart: {
-          type: 'spline'
+          type: 'areaspline'
       },
       credits: {
         enabled: false
@@ -143,7 +143,7 @@ var createChart = function (history) {
         showFirstLabel: false
       },
       plotOptions: {
-          spline: {
+          areaspline: {
               lineWidth: 2,
               marker: {
                 enabled: false,
@@ -161,7 +161,9 @@ var createChart = function (history) {
               pointInterval: 3600000 * 24, // one day
               pointStart: history.start,
               color: '#319638',
-              negativeColor: '#BD140E'
+              fillColor: "rgba(49, 150, 56, 0.1)",
+              negativeColor: '#BD140E',
+              negativeFillColor: "rgba(189, 20, 14, 0.1)",
           }
       },
       series: [{
