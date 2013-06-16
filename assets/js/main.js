@@ -304,6 +304,12 @@ var loadUser = function (twitter_handle) {
 };
 
 $(document).ready(function () {
+   $.ajaxSetup({
+      error: function(xhr, status, error) {
+         hideData();
+      }
+   });
+
    $('#start-over a').click(function (e) {
       e.preventDefault();
       hideData();
