@@ -97,6 +97,7 @@ var setScore = function (score) {
 };
 
 var hideData = function () {
+   $("html, body").animate({ scrollTop: 0 }, "slow");
    $('#gather-wrapper').removeClass('hide');
    $('#data').addClass('hide');
    $('.form').removeClass('hide');
