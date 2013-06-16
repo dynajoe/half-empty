@@ -12,37 +12,38 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
       console.error('No twitter handle defined.');
       process.exit(1);
    }
-   twitter.getTweets(payload.handle, function(err, data) {
+   var twitter_handle = payload.handle.toLowerCase().trim();
+   twitter.getTweets(twitter_handle, function(err, data) {
       if(err) {
          if (err.statusCode == 404) {
-            twitterCache.put(payload.handle, 'null', function(err, msg) {
+            twitterCache.put(twitter_handle, 'null', function(err, msg) {
                if(err) {
                   console.error('Failed to put to cache. ', err);
                   process.exit(1);
                }
-               console.log('Twitter user \'' + payload.handle + '\' doesn\'t exist, but we were successful anyway.' + JSON.stringify(msg));
+               console.log('Twitter user \'' + twitter_handle + '\' doesn\'t exist, but we were successful anyway.' + JSON.stringify(msg));
                process.exit(0);
             })
          }
          else {
-            console.error('Failed to retrieve tweets for user: ' + payload.handle, err);
+            console.error('Failed to retrieve tweets for user: ' + twitter_handle, err);
             process.exit(1);
          }
          return;
       }
-      console.log('Retrieved ' + data.tweets.length + ' tweets for user ' + payload.handle);
+      console.log('Retrieved ' + data.tweets.length + ' tweets for user ' + twitter_handle);
       alchemy.analyzeTweets(data.tweets, function(err, analyzedTweets) {
          if(err) {
-            console.error('Failed to analyze tweets for user: ' + payload.handle, err);
+            console.error('Failed to analyze tweets for user: ' + twitter_handle, err);
             process.exit(1);
          }
-         console.log('Analyzed ' + analyzedTweets.length + ' tweets for user ' + payload.handle);
-         twitterCache.put(payload.handle, JSON.stringify(data), function(err, msg) {
+         console.log('Analyzed ' + analyzedTweets.length + ' tweets for user ' + twitter_handle);
+         twitterCache.put(twitter_handle, JSON.stringify(data), function(err, msg) {
             if(err) {
                console.error('Failed to put to cache. ', err);
                process.exit(1);
             }
-            console.log('Successfully stored ' + payload.handle + '\'s tweets! ' + JSON.stringify(msg));
+            console.log('Successfully stored ' + twitter_handle + '\'s tweets! ' + JSON.stringify(msg));
          });
       });
    });
