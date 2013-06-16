@@ -15,7 +15,9 @@ var createTweet = function (tweet) {
   span.attr('data-sentiment', JSON.stringify(tweet.sentiment));
   span.attr('data-score', JSON.stringify(tweet.score));
   span.attr('id', tweet.id);
-  span.html(tweet.text);
+
+  var text = twttr.txt.autoLink(tweet.text);
+  span.html(text);
 
   return span;
 };
