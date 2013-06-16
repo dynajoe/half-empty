@@ -1,10 +1,13 @@
 @import mixins
 @import loading
+accent-color = #2187e7
+
 html
    font-size 100%
    padding 20px
    background-color #ccc
-
+a
+   color accent-color
 body
    padding 20px
    font-family 'Molengo', serif
@@ -94,7 +97,7 @@ h1
       -webkit-transition border 500ms ease-out
       float right
       &:focus
-         border 1px solid blue
+         border 1px solid accent-color
 
    button
       float right
@@ -108,7 +111,7 @@ h1
       text-decoration underline
       -webkit-transition color 500ms ease-out
       &:hover
-         color blue
+         color accent-color
 #data
    margin 0 auto
    -webkit-transition opacity 500ms ease-out
@@ -168,6 +171,22 @@ h1
             background-image url('/images/noisy.png')
    .content
       margin-top 5px
+      .influencers
+         margin 5px
+         background-color white
+         border-radius 5px
+         line-height 1.2em
+         font-size 1.2em
+         h3
+            float left
+            padding 5px
+
+         .influencers-list
+            padding 5px
+           
+            a
+               margin-right 5px
+
       .graphs
          overflow hidden
 
@@ -228,6 +247,7 @@ h1
 footer  
    border-top 1px solid black
    width 960px
+   margin 0 auto
    ul 
       margin 0 auto
       li 

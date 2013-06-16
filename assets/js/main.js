@@ -22,12 +22,13 @@ var createTweet = function (tweet) {
 
 var setTweets = function (selector, data) {
    var $container = $(selector);
+   $('.tweet', $container).remove();
 
    for (var i = 0; i < data.length; i++) {
       var tweet = data[i];
       var s = tweet.sentiment;
       var score = s.score || 'neutral';
-      var li = $('<li class="' + s.type +'"></li>');
+      var li = $('<li class="tweet ' + s.type +'"></li>');
       li.append(createTweet(tweet));
 
       $container.append(li);
@@ -35,18 +36,46 @@ var setTweets = function (selector, data) {
 };
 
 var setTopics = function (topics) {
-  var $topics = $('#data .topics');
-  $container = $('<p/>');
+   $('.topic-list').remove();
 
-  for (var i = 0; i < topics.length; i++) {
-    var $span = $('<span />');
-    var text = topics[i].text;
+   var $topics = $('#data .topics');
+   $container = $('<p class="topic-list"/>');
 
-    $span.html(text + " ");
+   for (var i = 0; i < topics.length; i++) {
+      var $span = $('<span class="topic" />');
+      var text = topics[i].text;
+
+      $span.html(text + " ");
     
-    $container.append($span);
-  }
-  $topics.append($container);
+      $container.append($span);
+   }
+
+   if (topics.length == 0) {
+      $container.append('<span class="topic unknown">Unknown Interests</span>');
+   }
+
+   $topics.append($container);
+};
+
+var setInfluencers = function (influencers) {
+   $('.influencers-list').remove();
+
+   var $influencers = $('#data .influencers');
+   $container = $('<p class="influencers-list" />');
+
+   influencers.forEach(function(influencer) {
+      var $a = $('<a class="influencer" href="#" />');
+      $a.html('@' + influencer);
+
+      $a.click(function (e) {
+         e.preventDefault();
+         loadUser(influencer);
+      });
+
+      $container.append($a);
+   });
+
+   $influencers.append($container);
 };
 
 var setScore = function (score) {
@@ -72,6 +101,7 @@ var populateData = function (data) {
    }  
 
    showData();
+   setInfluencers(data.influencers);
    setTopics(data.topics);
    setScore(data.scored.overallScore);
    setUser(data.user);
@@ -219,6 +249,35 @@ var createChart = function (history) {
   });
 }
 
+var loadUser = function (twitter_handle) {
+   var checkTask = function (id) {
+      $.get('/check/' + id, function (data) {
+         console.log(data.status);
+         if (data.status === 'success' || data.status === 'complete') {
+            return getData(twitter_handle);
+         } else if (data.status === 'error' || data.status === 'timeout') {
+            return showUserNotFound(twitter_handle);
+         } else {
+            return setTimeout(function () { 
+               checkTask(id); 
+            }, 250);  
+         }
+      });
+   };
+
+   var getData = function () {   
+      $.get('/analyze/' + twitter_handle, function (data) {
+         if (data.processing) {
+            checkTask(data.id);
+         } else {
+            populateData(data);
+         }
+      });
+   };
+   
+   getData();
+};
+
 $(document).ready(function () {
    $('#start-over a').click(function (e) {
       e.preventDefault();
@@ -228,37 +287,11 @@ $(document).ready(function () {
    $('#gather-wrapper form').submit(function (e) {
       e.preventDefault();
       
-      $this = $(this);
-
       var twitter_handle = $('input[name=twitter_handle]').val();
+      
       $('.form').addClass('hide');
       
-      var checkTask = function (id) {
-         $.get('/check/' + id, function (data) {
-            console.log(data.status);
-            if (data.status === 'success' || data.status === 'complete') {
-               return getData(twitter_handle);
-            } else if (data.status === 'error' || data.status === 'timeout') {
-               return showUserNotFound(twitter_handle);
-            } else {
-               return setTimeout(function () { 
-                  checkTask(id); 
-               }, 250);  
-            }
-         });
-      };
-
-      var getData = function () {   
-         $.get('/analyze/' + twitter_handle, function (data) {
-            if (data.processing) {
-               checkTask(data.id);
-            } else {
-               populateData(data);
-            }
-         });
-      };
-      
-      getData();
+      loadUser(twitter_handle);
    });
 
    //$('input[name=twitter_handle]').val('smerchek');
