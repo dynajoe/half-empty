@@ -119,7 +119,12 @@ var createBubble = function(bubble) {
         plotBorderWidth: 1,
         zoomType: 'xy'
     },
-
+    credits: {
+      enabled: false
+    },
+    legend: {
+      enabled: false
+    },
     title: {
         text: 'Score over time, wrt Sentiment Weight'
     },
