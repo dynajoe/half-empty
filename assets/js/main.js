@@ -82,7 +82,8 @@ var populateData = function (data) {
 };
 
 var createBubble = function(bubble) {
-  $('.explore').highcharts({
+  console.log('Bubble Data: ' + JSON.stringify(bubble, null, 2));
+  $('.explorer').highcharts({
     chart: {
         type: 'bubble',
         plotBorderWidth: 1,
@@ -94,7 +95,11 @@ var createBubble = function(bubble) {
     },
 
     xAxis: {
-        gridLineWidth: 1
+        gridLineWidth: 1,
+        title: {
+          text: null
+        },
+        type: "datetime"
     },
 
     yAxis: {
