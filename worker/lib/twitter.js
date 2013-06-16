@@ -61,7 +61,9 @@ module.exports.getTweets = function(handle, cb) {
          twit.getUserTimeline(opts, function(err, data) {
             if (err) return callback(err);
             if (!user) {
-               user = data[0].user;
+               if (data[0]) {
+                 user = data[0].user;
+               }
             }
             console.log('Twitter Paging: Retrieved ' + data.length + ' more tweets');
             for (var i = data.length - 1; i >= 0; i--) {
