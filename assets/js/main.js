@@ -10,7 +10,15 @@ var setUser = function (user) {
 };
 
 var createTweet = function (tweet) {
-   return tweet;
+  var span = $('<span/>');
+  
+  span.attr('data-sentiment', JSON.stringify(tweet.sentiment));
+  span.attr('data-score', JSON.stringify(tweet.score));
+  span.attr('id', tweet.id);
+  console.log(tweet);
+  span.html(tweet.text);
+
+  return span;
 };
 
 var setTweets = function (selector, data) {
@@ -20,8 +28,10 @@ var setTweets = function (selector, data) {
       var tweet = data[i];
       var s = tweet.sentiment;
       var score = s.score || 'neutral';
+      var li = $('<li class="' + s.type +'"></li>');
+      li.append(createTweet(tweet));
 
-      $container.append('<li class="' + s.type +'">' + createTweet(tweet.text) +'</li>');
+      $container.append(li);
    }
 };
 
