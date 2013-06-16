@@ -59,7 +59,8 @@ module.exports = function (app) {
                      scored: calc.score(tweets),
                      tweets: tweets,
                      history: calc.scoreHistory(90, tweets),
-                     topics: cleanTopicText(piTopics.concat(kTopics))
+                     topics: cleanTopicText(piTopics.concat(kTopics)),
+                     bubble: calc.getBubbleData(tweets)
                   };
 
                   res.end(JSON.stringify(result));

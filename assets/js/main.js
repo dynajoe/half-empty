@@ -78,6 +78,39 @@ var populateData = function (data) {
    setTweets('.positive ul', data.scored.positiveInfluencers);
    setTweets('.negative ul', data.scored.negativeInfluencers);
    createChart(data.history);
+   createBubble(data.bubble);
+};
+
+var createBubble = function(bubble) {
+  $('.explore').highcharts({
+    chart: {
+        type: 'bubble',
+        plotBorderWidth: 1,
+        zoomType: 'xy'
+    },
+
+    title: {
+        text: 'Score over time, wrt Sentiment Weight'
+    },
+
+    xAxis: {
+        gridLineWidth: 1
+    },
+
+    yAxis: {
+        startOnTick: false,
+        endOnTick: false
+    },
+
+    series: [{
+        data: bubble,
+        displayNegative: true,
+        color: '#319638',
+        negativeColor: '#BD140E'
+        // zThreshold: 0
+    }]
+
+  });
 };
 
 var createChart = function (history) {
