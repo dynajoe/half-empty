@@ -48,9 +48,15 @@ module.exports = function (app) {
       
       cache.get(twitter_handle, function (err, data) {
          if (data) {
-            var tweets = JSON.parse(data);
+            console.log('Got some data for ' + twitter_handle);
+            var parsed = JSON.parse(data);
+            if (!parsed) {
+               return res.end("");
+            }
+            var user = parsed.user;
+            var tweets = parsed.tweets;
             var result;
-
+            console.log(tweets[0]);
             if (tweets) {
                async.parallel([
                   function (cb) { peerindex.getTopics(twitter_handle, cb); },
@@ -60,7 +66,7 @@ module.exports = function (app) {
                   var kTopics = results[1];
 
                   result =  {
-                     user: tweets[0].user,
+                     user: user,
                      scored: calc.score(tweets),
                      tweets: tweets,
                      history: calc.scoreHistory(90, tweets),
