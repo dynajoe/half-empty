@@ -2,11 +2,18 @@ var twitter = require('ntwitter');
 var moment = require('moment');
 var async = require('async');
 
-var twit = new twitter({
+var scott_twit = new twitter({
   consumer_key: '6F9g1bQtl8l14AkJzBgw',
   consumer_secret: 'ix9O34lNgaVqIk6TJvKp5AZbeboMDF8MxBEIl8WtIQ',
   access_token_key: '49359644-yJBynxQGA5eYEpAwcOq8RzWP9X0gUIOnNPOaEBeH4',
   access_token_secret: 'etIdekP6F3vAse8iD3K5nxKSQHyJZN8xiCbGLIIls'
+});
+
+var twit = new twitter({
+  consumer_key: 'HiRj7aQ8hPXsXYBEW8LMKg',
+  consumer_secret: 'a0c9gAQ2gFWP4CkXQrgnAKokrVHZQ6eFCe9dTjM2Pe4',
+  access_token_key: '237468953-DkgJvyeWtg2ENYLqdStatnWLR1k4UdLrFMlwKXmF',
+  access_token_secret: 'JwDW8PYiU3zsQzz6GXohNTLE0ERqUfFWBdBSpcD6U'
 });
 
 function getUser(tweet) {
