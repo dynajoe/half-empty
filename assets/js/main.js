@@ -15,7 +15,6 @@ var createTweet = function (tweet) {
   span.attr('data-sentiment', JSON.stringify(tweet.sentiment));
   span.attr('data-score', JSON.stringify(tweet.score));
   span.attr('id', tweet.id);
-  console.log(tweet);
   span.html(tweet.text);
 
   return span;
@@ -35,6 +34,21 @@ var setTweets = function (selector, data) {
    }
 };
 
+var setTopics = function (topics) {
+  var $topics = $('#data .topics');
+  $container = $('<p/>');
+
+  for (var i = 0; i < topics.length; i++) {
+    var $span = $('<span />');
+    var text = topics[i].text;
+
+    $span.html(text + " ");
+    
+    $container.append($span);
+  }
+  $topics.append($container);
+};
+
 var setScore = function (score) {
    $('#data .score').html(score);
 };
@@ -48,7 +62,7 @@ var populateData = function (data) {
 
    $('#gather').fadeOut('slow');
    $('#data').fadeIn('slow');
-
+   setTopics(data.topics);
    setScore(data.scored.overallScore);
    setUser(data.user);
    setTweets('.positive ul', data.scored.positiveInfluencers);
@@ -180,6 +194,6 @@ $(document).ready(function () {
       getData();
    });
 
-   $('input[name=twitter_handle]').val('joeandaverde');
+   $('input[name=twitter_handle]').val('smerchek');
    $('#gather form').submit();
 });
