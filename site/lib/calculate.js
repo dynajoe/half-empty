@@ -6,12 +6,9 @@ module.exports.scoreHistory = function(numberOfDays, tweets) {
    for (var i = numberOfDays - 1; i >= 0; i--) {
       var date = moment().subtract('days', i);
       var score = scoreFromDate(date, tweets);
-      scoresOverTime.push({
-         date: date,
-         score: score.overallScore
-      });
+      scoresOverTime.push(score.overallScore);
    };
-   return scoresOverTime;
+   return { start: moment().subtract('days', numberOfDays - 1).valueOf(), data: scoresOverTime };
 }
 
 module.exports.score = function(tweets) {
