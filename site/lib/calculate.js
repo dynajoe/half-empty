@@ -27,8 +27,13 @@ module.exports.scoreFromDate = scoreFromDate = function(fromDate, tweets) {
    for (var i = tweets.length - 1; i >= 0; i--) {
       var age = getAge(fromDate, tweets[i]);
       if (age < 0) continue;
+      
       var tweetScore = getTweetScore(fromDate, tweets[i]);
+      
+      if (typeof tweetScore === 'undefined') continue;
+
       tweets[i].score = tweetScore;
+
       if (tweetScore > 0) {
          positiveInfluencers = updateInfluencers(positiveInfluencers, tweets[i], tweetScore);
       }
@@ -39,7 +44,7 @@ module.exports.scoreFromDate = scoreFromDate = function(fromDate, tweets) {
       sum += tweetScore;
       count++;
    };
-   console.log("Sum: " + sum);
+   log("Sum: " + sum);
    return { 
       overallScore: Math.round((sum / count) * 100),
       positiveInfluencers: positiveInfluencers,
@@ -59,6 +64,10 @@ function updateInfluencers(influencers, tweet, score) {
    return _.sortBy(influencers, function(tweet) { return Math.abs(tweet.score) * -1; });
 }
 
+function shouldIgnoreSentiment(sentimentScore) {
+   return sentimentScore == 0 || Math.round(sentimentScore * 100) == 0;
+}
+
 function getTweetScore(fromDate, tweet) {
    var age = getAge(fromDate, tweet);
    var ageFactor = getAgeFactor(age);
@@ -67,10 +76,21 @@ function getTweetScore(fromDate, tweet) {
    var reach = getReach(tweet);
    var sentimentScore = getSentimentScore(tweet);
 
-   console.log("Tweet: " + tweet.text);
-   console.log("   Sentiment: " + sentimentScore.toFixed(2) + " Age: " + age.toFixed(2) + " days Factor: " + ageFactor + " RT? " + factorRT + " Reply? " + factorReply + " Reach: " + reach.toFixed(2));
+   log("Tweet: " + tweet.text);
+   log("   Sentiment: " + sentimentScore.toFixed(2) + " Age: " + age.toFixed(2) + " days Factor: " + ageFactor + " RT? " + factorRT + " Reply? " + factorReply + " Reach: " + reach.toFixed(2));
    var score = sentimentScore*ageFactor*factorRT*factorReply*reach;
-   console.log("   Score: " + score.toFixed(6));
+
+   if (shouldIgnoreSentiment(sentimentScore)) {
+      log('Ignoring sentiment score of ' + sentimentScore)
+      return;
+   }
+
+   if (sentimentScore < .1) {
+      log(tweet.text);
+      log("" + sentimentScore + "ss * "+ ageFactor + "af * " + factorRT + "frt * " + factorReply + "fr * " + reach + "r");
+      log("   Score: " + score.toFixed(6));
+   }
+
    return score;
 }
 
@@ -104,7 +124,11 @@ function getReach(tweet) {
 }
 
 function getSentimentScore(tweet) {
-   if (!tweet.sentiment) console.log(JSON.stringify(tweet, null, 2));
+   if (!tweet.sentiment) log(JSON.stringify(tweet, null, 2));
    if (tweet.sentiment.type === 'neutral') return 0;
    return parseFloat(tweet.sentiment.score);
+}
+
+function log (text) {
+   console.log(text)
 }
