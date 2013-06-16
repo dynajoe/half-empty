@@ -69,6 +69,7 @@ var setInfluencers = function (influencers) {
 
       $a.click(function (e) {
          e.preventDefault();
+         showLoading();
          loadUser(influencer);
       });
 
@@ -86,6 +87,11 @@ var hideData = function () {
    $('#gather-wrapper').removeClass('hide');
    $('#data').addClass('hide');
    $('.form').removeClass('hide');
+};
+
+var showLoading = function () {
+   hideData();
+   $('.form').addClass('hide');
 };
 
 var showData = function () {
