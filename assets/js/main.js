@@ -180,6 +180,6 @@ $(document).ready(function () {
       getData();
    });
 
-   // $('input[name=twitter_handle]').val('joeandaverde');
-   // $('#gather form').submit();
+   $('input[name=twitter_handle]').val('joeandaverde');
+   $('#gather form').submit();
 });
