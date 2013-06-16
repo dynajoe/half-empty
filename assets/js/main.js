@@ -275,6 +275,9 @@ var createChart = function (history) {
 }
 
 var loadUser = function (twitter_handle) {
+
+   $('.analyze-for').html(twitter_handle);
+   
    var checkTask = function (id) {
       $.get('/check/' + id, function (data) {
          console.log(data.status);
@@ -312,6 +315,7 @@ $(document).ready(function () {
 
    $('#start-over a').click(function (e) {
       e.preventDefault();
+      $('input[name=twitter_handle]').val('');
       hideData();
    });
 
