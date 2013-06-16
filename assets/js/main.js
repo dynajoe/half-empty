@@ -70,7 +70,7 @@ var createChart = function (history) {
         enabled: false
       },
       title: {
-          text: '90 Day History'
+          text: '90-Day Score History'
       },
       xAxis: {
         gridLineWidth: 1,
