@@ -70,7 +70,8 @@ module.exports = function (app) {
                      tweets: sortedTweets,
                      history: calc.scoreHistory(90, sortedTweets),
                      topics: cleanTopicText(piTopics.concat(kTopics)),
-                     influencers: influencers
+                     influencers: influencers,
+                     bubble: calc.getBubbleData(sortedTweets)
                   };
 
                   res.end(JSON.stringify(result));

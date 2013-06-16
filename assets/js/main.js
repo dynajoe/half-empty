@@ -114,6 +114,49 @@ var populateData = function (data) {
    setTweets('.positive ul', data.scored.positiveInfluencers);
    setTweets('.negative ul', data.scored.negativeInfluencers);
    createChart(data.history);
+   createBubble(data.bubble);
+};
+
+var createBubble = function(bubble) {
+  console.log('Bubble Data: ' + JSON.stringify(bubble, null, 2));
+  $('.explorer').highcharts({
+    chart: {
+        type: 'bubble',
+        plotBorderWidth: 1,
+        zoomType: 'xy'
+    },
+    credits: {
+      enabled: false
+    },
+    legend: {
+      enabled: false
+    },
+    title: {
+        text: 'Score over time, wrt Sentiment Weight'
+    },
+
+    xAxis: {
+        gridLineWidth: 1,
+        title: {
+          text: null
+        },
+        type: "datetime"
+    },
+
+    yAxis: {
+        startOnTick: false,
+        endOnTick: false
+    },
+
+    series: [{
+        data: bubble,
+        displayNegative: true,
+        color: '#319638',
+        negativeColor: '#BD140E'
+        // zThreshold: 0
+    }]
+
+  });
 };
 
 var createChart = function (history) {
@@ -130,7 +173,10 @@ var createChart = function (history) {
         enabled: false
       },
       title: {
-          text: '90-Day Score History'
+        text: '90-Day Score History'
+      },
+      tooltip: {
+        valueDecimals: 2
       },
       xAxis: {
         gridLineWidth: 1,
