@@ -132,7 +132,10 @@ var createChart = function (history) {
         enabled: false
       },
       title: {
-          text: '90-Day Score History'
+        text: '90-Day Score History'
+      },
+      tooltip: {
+        valueDecimals: 2
       },
       xAxis: {
         gridLineWidth: 1,
