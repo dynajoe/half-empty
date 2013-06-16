@@ -5,7 +5,8 @@ var ironio = require('node-ironio')('nfFVh41-R6ZkFU0SzGOgzJM9JCk'),
    calc = require('../lib/calculate'),
    peerindex = require('../lib/peerindex'),
    klout = require('../lib/klout'),
-   async = require('async');
+   async = require('async'),
+   moment = require('moment');
 
 var cleanTopicText = function (topics) {
    topics.forEach(function (t) {
@@ -37,13 +38,19 @@ module.exports = function (app) {
       var twitter_handle = req.params.handle;
       
       cache.get(twitter_handle, function (err, data) {
+         if (err) {
+            res.writeHead(500);
+            res.end();
+            return;
+         }
+
          if (data) {
             var parsed = JSON.parse(data);
             
             if (parsed && parsed.tweets) {
                var user = parsed.user;
                var tweets = parsed.tweets;
-               
+
                console.log('Crunching ' + tweets.length + ' for ' + twitter_handle);
 
                async.parallel([
@@ -52,11 +59,13 @@ module.exports = function (app) {
                ], function (err, results) {
                   var piTopics = results[0];
                   var kTopics = results[1];
+                  
+                  var sortedTweets = _.sortBy(tweets, function (t) { return -moment(t.created_at).valueOf(); });
 
                   var result =  {
                      user: user,
                      scored: calc.score(tweets),
-                     tweets: tweets,
+                     tweets: sortedTweets,
                      history: calc.scoreHistory(90, tweets),
                      topics: cleanTopicText(piTopics.concat(kTopics)),
                      bubble: calc.getBubbleData(tweets)
@@ -67,7 +76,7 @@ module.exports = function (app) {
             }
             else {
                res.writeHead(404);
-               res.end();
+               res.end(JSON.stringify(parsed));
             }
          }
          else {

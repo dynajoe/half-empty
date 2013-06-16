@@ -228,9 +228,9 @@ $(document).ready(function () {
       var checkTask = function (id) {
          $.get('/check/' + id, function (data) {
             console.log(data.status);
-            if (data.status === 'success') {
+            if (data.status === 'success' || data.status === 'complete') {
                return getData(twitter_handle);
-            } else if (data.status === 'error') {
+            } else if (data.status === 'error' || data.status === 'timeout') {
                return showUserNotFound(twitter_handle);
             } else {
                return setTimeout(function () { 
