@@ -1,19 +1,24 @@
 extends layout
       
 block content
-   #gather
-      .pane.form
-         form(method='get', action="/analyze")
-            fieldset 
-               label Twitter:
-                  input(name="twitter_handle", type="text", placeholder="twitter handle")
-               button(type="submit") Get Started
-      .pane.analyzing
-         .loading
-            .circle
-            .circle1
-            p Analyzing...
-   #data 
+   #gather-wrapper
+      #gather
+         .pane.form
+            form(method='get', action="/analyze")
+               fieldset 
+                  label Twitter:
+                     input(name="twitter_handle", type="text", placeholder="twitter handle")
+                  button(type="submit") Get Started
+         .pane.analyzing
+            .loading
+               .circle
+               .circle1
+               p Analyzing...
+      
+      #start-over 
+         a(href="#") Start Over
+
+   #data.hide
       .header
          .profile
             .details
@@ -36,3 +41,4 @@ block content
             .wrapper
                h3 Negative Impact
                ul
+      .clear

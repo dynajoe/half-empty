@@ -53,6 +53,17 @@ var setScore = function (score) {
    $('#data .score').html(score);
 };
 
+var hideData = function () {
+   $('#gather-wrapper').removeClass('hide');
+   $('#data').addClass('hide');
+   $('.form').removeClass('hide');
+};
+
+var showData = function () {
+   $('#gather-wrapper').addClass('hide');
+   $('#data').removeClass('hide');
+};
+
 var populateData = function (data) {
 
    if (!data.user) {
@@ -60,8 +71,7 @@ var populateData = function (data) {
       return;
    }  
 
-   $('#gather').fadeOut('slow');
-   $('#data').fadeIn('slow');
+   showData();
    setTopics(data.topics);
    setScore(data.scored.overallScore);
    setUser(data.user);
@@ -169,14 +179,19 @@ var createChart = function (history) {
 }
 
 $(document).ready(function () {
-   $('#gather form').submit(function (e) {
+   $('#start-over a').click(function (e) {
+      e.preventDefault();
+      hideData();
+   });
+
+   $('#gather-wrapper form').submit(function (e) {
       e.preventDefault();
       
       $this = $(this);
 
       var twitter_handle = $('input[name=twitter_handle]').val();
       $('.form').addClass('hide');
-         
+      
       var checkTask = function (id) {
          $.get('/check/' + id, function (data) {
             console.log(data.status);
