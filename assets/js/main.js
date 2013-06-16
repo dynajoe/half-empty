@@ -53,38 +53,90 @@ var createChart = function (history) {
       chart: {
           type: 'spline'
       },
+      credits: {
+        enabled: false
+      },
+      legend: {
+        enabled: false
+      },
       title: {
           text: '90 Day History'
       },
       xAxis: {
-          type: 'datetime'
+        gridLineWidth: 1,
+        gridLineDashStyle: "Dash",
+        gridLineColor: "#cccccc",
+        labels: {
+          overflow: "justify",
+          style: {
+            color: "#a0a0a0",
+            font: "11px DINLight, Arial, sans-serif",
+            "text-transform": "uppercase"
+          }
+        },
+        lineColor: "#aaaaaa",
+        lineWidth: 1,
+        minorGridLineWidth: 0,
+        maxPadding: 0,
+        minPadding: 0,
+        tickInterval: 1555200000,
+        tickLength: 0,
+        tickmarkPlacement: "on",
+        title: {
+          text: null
+        },
+        type: "datetime"
       },
+      // yAxis: {
+      //     title: {
+      //         text: 'Score'
+      //     },
+      //     //min: 0,
+      // },
       yAxis: {
-          title: {
-              text: 'Score'
-          },
-          //min: 0,
-          minorGridLineWidth: 0,
-          gridLineWidth: 0,
-          alternateGridColor: null
+        gridLineWidth: 1,
+        gridLineDashStyle: "Dash",
+        gridLineColor: "#cccccc",
+        labels: {
+          style: {
+            color: "#a0a0a0",
+            font: "11px DINLight, Arial, sans-serif",
+            "text-transform": "uppercase"
+          }
+        },
+        lineColor: "#aaaaaa",
+        lineWidth: 1,
+        minorGridLineWidth: 0,
+        tickInterval: 5,
+        tickLength: 0,
+        title: {
+          text: null
+        },
+        showFirstLabel: false
       },
       plotOptions: {
           spline: {
-              lineWidth: 4,
-              states: {
-                  hover: {
-                      lineWidth: 5
-                  }
-              },
+              lineWidth: 2,
               marker: {
-                  enabled: false
+                enabled: false,
+                fillColor: "#fff",
+                lineColor: null,
+                lineWidth: 2,
+                radius: 3,
+                states: {
+                  hover: {
+                    enabled: true
+                  }
+                },
+                symbol: "circle"
               },
               pointInterval: 3600000 * 24, // one day
-              pointStart: history.start
+              pointStart: history.start,
+              negativeColor: '#FF0000'
           }
       },
       series: [{
-          name: 'Scores',
+          name: 'Score',
           data: history.data
       }],
       navigation: {
@@ -118,6 +170,6 @@ $(document).ready(function () {
       getData();
    });
 
-   $('input[name=twitter_handle]').val('joeandaverde');
-   $('#gather form').submit();
+   // $('input[name=twitter_handle]').val('joeandaverde');
+   // $('#gather form').submit();
 });
