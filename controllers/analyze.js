@@ -58,9 +58,9 @@ module.exports = function (app) {
                   function (cb) { klout.getTopics(twitter_handle, cb); },
                   function (cb) { klout.getInfluencers(twitter_handle, cb); }
                ], function (err, results) {
-                  var piTopics = results[0];
-                  var kTopics = results[1];
-                  var influencers = results[2];
+                  var piTopics = results[0] || [];
+                  var kTopics = results[1] || [];
+                  var influencers = results[2] || [];
                   
                   var sortedTweets = _.sortBy(tweets, function (t) { return -moment(t.created_at).valueOf(); });
 

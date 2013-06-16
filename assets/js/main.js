@@ -36,10 +36,10 @@ var setTweets = function (selector, data) {
 };
 
 var setTopics = function (topics) {
-   $('.topic').remove();
+   $('.topic-list').remove();
 
    var $topics = $('#data .topics');
-   $container = $('<p/>');
+   $container = $('<p class="topic-list"/>');
 
    for (var i = 0; i < topics.length; i++) {
       var $span = $('<span class="topic" />');
@@ -50,18 +50,22 @@ var setTopics = function (topics) {
       $container.append($span);
    }
 
+   if (topics.length == 0) {
+      $container.append('<span class="topic unknown">Unknown Interests</span>');
+   }
+
    $topics.append($container);
 };
 
 var setInfluencers = function (influencers) {
-   $('.influencer').remove();
+   $('.influencers-list').remove();
 
    var $influencers = $('#data .influencers');
-   $container = $('<p/>');
+   $container = $('<p class="influencers-list" />');
 
    influencers.forEach(function(influencer) {
       var $a = $('<a class="influencer" href="#" />');
-      $a.html('@' + influencer + " ");
+      $a.html('@' + influencer);
 
       $a.click(function (e) {
          e.preventDefault();
