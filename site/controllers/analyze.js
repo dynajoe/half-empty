@@ -50,12 +50,14 @@ module.exports = function (app) {
             if (tweets) {
                var scored = calc.score(tweets);
                var user = tweets[0].user;
+               var history = calc.scoreHistory(90, tweets);
             }
 
             var result =  {
                user: user,
                scored: scored,
-               tweets: tweets
+               tweets: tweets,
+               history: history
             };
 
             res.end(JSON.stringify(result));

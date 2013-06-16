@@ -43,7 +43,57 @@ var populateData = function (data) {
    setUser(data.user);
    setTweets('.positive ul', data.scored.positiveInfluencers);
    setTweets('.negative ul', data.scored.negativeInfluencers);
+   createChart(data.history);
 };
+
+var createChart = function (history) {
+   console.log("Start: " + history.start);
+   console.log("Data: " + history.data);
+   $('.last90').highcharts({
+      chart: {
+          type: 'spline'
+      },
+      title: {
+          text: '90 Day History'
+      },
+      xAxis: {
+          type: 'datetime'
+      },
+      yAxis: {
+          title: {
+              text: 'Score'
+          },
+          //min: 0,
+          minorGridLineWidth: 0,
+          gridLineWidth: 0,
+          alternateGridColor: null
+      },
+      plotOptions: {
+          spline: {
+              lineWidth: 4,
+              states: {
+                  hover: {
+                      lineWidth: 5
+                  }
+              },
+              marker: {
+                  enabled: false
+              },
+              pointInterval: 3600000 * 24, // one day
+              pointStart: history.start
+          }
+      },
+      series: [{
+          name: 'Scores',
+          data: history.data
+      }],
+      navigation: {
+          menuItemStyle: {
+              fontSize: '10px'
+          }
+      }
+  });
+}
 
 $(document).ready(function () {
    $('#gather form').submit(function (e) {
@@ -68,6 +118,6 @@ $(document).ready(function () {
       getData();
    });
 
-  $('input[name=twitter_handle]').val('joeandaverde');
-  $('#gather form').submit();
+   $('input[name=twitter_handle]').val('joeandaverde');
+   $('#gather form').submit();
 });
