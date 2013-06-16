@@ -25,7 +25,11 @@ function getModifiedTweet(tweet) {
 
    };
    if (tweet.retweeted_status) {
-      modifiedTweet.retweeted_status = tweet.retweeted_status;
+      modifiedTweet.retweeted_status = {
+         id: tweet.retweeted_status.id,
+         screen_name: tweet.retweeted_status.screen_name,
+         created_at: tweet.retweeted_status.created_at
+      };
    }
    return modifiedTweet;
 }
@@ -37,12 +41,12 @@ module.exports.getTweets = function(handle, cb) {
 
    async.until(
       function () {
-         return tweets.length > 1000 || (oldestTweet && lastOldestTweet && oldestTweet.id === lastOldestTweet.id);
+         return tweets.length > 800 || (oldestTweet && lastOldestTweet && oldestTweet.id === lastOldestTweet.id);
       },
       function (callback) {
          var opts = {
             screen_name: handle,
-            count: 1000
+            count: 800
          };
          if (oldestTweet) {
             opts.max_id = oldestTweet.id;
