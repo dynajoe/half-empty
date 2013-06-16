@@ -97,12 +97,6 @@ var createChart = function (history) {
         },
         type: "datetime"
       },
-      // yAxis: {
-      //     title: {
-      //         text: 'Score'
-      //     },
-      //     //min: 0,
-      // },
       yAxis: {
         gridLineWidth: 1,
         gridLineDashStyle: "Dash",
@@ -142,7 +136,8 @@ var createChart = function (history) {
               },
               pointInterval: 3600000 * 24, // one day
               pointStart: history.start,
-              negativeColor: '#FF0000'
+              color: '#319638',
+              negativeColor: '#BD140E'
           }
       },
       series: [{
