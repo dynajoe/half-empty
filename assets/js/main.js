@@ -136,7 +136,7 @@ var createChart = function (history) {
           }
       },
       series: [{
-          name: 'Scores',
+          name: 'Score',
           data: history.data
       }],
       navigation: {
