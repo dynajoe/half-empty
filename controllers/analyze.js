@@ -39,14 +39,11 @@ module.exports = function (app) {
       cache.get(twitter_handle, function (err, data) {
          if (data) {
             var parsed = JSON.parse(data);
-            if (!parsed) {
-               return res.end("");
-            }
-            var user = parsed.user;
-            var tweets = parsed.tweets;
-            var result;
-            console.log('Crunching ' + tweets.length + ' tweets for ' + twitter_handle);
-            if (tweets) {
+            
+            if (parsed && parsed.tweets) {
+               var user = parsed.user;
+               var tweets = parsed.tweets;
+
                async.parallel([
                   function (cb) { peerindex.getTopics(twitter_handle, cb); },
                   function (cb) { klout.getTopics(twitter_handle, cb); }
@@ -54,7 +51,7 @@ module.exports = function (app) {
                   var piTopics = results[0];
                   var kTopics = results[1];
 
-                  result =  {
+                  var result =  {
                      user: user,
                      scored: calc.score(tweets),
                      tweets: tweets,
@@ -66,7 +63,8 @@ module.exports = function (app) {
                });
             }
             else {
-               res.end("");
+               res.writeHead(404);
+               res.end();
             }
          }
          else {
