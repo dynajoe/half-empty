@@ -37,13 +37,19 @@ module.exports = function (app) {
       var twitter_handle = req.params.handle;
       
       cache.get(twitter_handle, function (err, data) {
+         if (err) {
+            res.writeHead(500);
+            res.end();
+            return;
+         }
+
          if (data) {
             var parsed = JSON.parse(data);
             
             if (parsed && parsed.tweets) {
                var user = parsed.user;
                var tweets = parsed.tweets;
-               
+
                console.log('Crunching ' + tweets.length + ' for ' + twitter_handle);
 
                async.parallel([
@@ -66,7 +72,7 @@ module.exports = function (app) {
             }
             else {
                res.writeHead(404);
-               res.end();
+               res.end(JSON.stringify(parsed));
             }
          }
          else {
