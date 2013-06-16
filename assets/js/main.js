@@ -1,5 +1,5 @@
 var showUserNotFound = function () {
-
+   $('.form').removeClass('hide');
 };
 
 var setUser = function (user) {
@@ -171,15 +171,29 @@ $(document).ready(function () {
       e.preventDefault();
       
       $this = $(this);
-      
-      var getData = function () {
-         $('.form').addClass('hide');
+
+      var twitter_handle = $('input[name=twitter_handle]').val();
+      $('.form').addClass('hide');
          
-         var twitter_handle = $('input[name=twitter_handle]').val();
-         
+      var checkTask = function (id) {
+         $.get('/check/' + id, function (data) {
+            console.log(data.status);
+            if (data.status === 'success') {
+               return getData(twitter_handle);
+            } else if (data.status === 'error') {
+               return showUserNotFound(twitter_handle);
+            } else {
+               return setTimeout(function () { 
+                  checkTask(id); 
+               }, 250);  
+            }
+         });
+      };
+
+      var getData = function () {   
          $.get('/analyze/' + twitter_handle, function (data) {
             if (data.processing) {
-               setTimeout(getData, 250);
+               checkTask(data.id);
             } else {
                populateData(data);
             }
@@ -189,6 +203,6 @@ $(document).ready(function () {
       getData();
    });
 
-   $('input[name=twitter_handle]').val('smerchek');
-   $('#gather form').submit();
+   //$('input[name=twitter_handle]').val('smerchek');
+   //$('#gather form').submit();
 });
