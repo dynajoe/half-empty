@@ -64,11 +64,11 @@ module.exports = function (app) {
 
                   var result =  {
                      user: user,
-                     scored: calc.score(tweets),
+                     scored: calc.score(sortedTweets),
                      tweets: sortedTweets,
-                     history: calc.scoreHistory(90, tweets),
+                     history: calc.scoreHistory(90, sortedTweets),
                      topics: cleanTopicText(piTopics.concat(kTopics)),
-                     bubble: calc.getBubbleData(tweets)
+                     bubble: calc.getBubbleData(sortedTweets)
                   };
 
                   res.end(JSON.stringify(result));
