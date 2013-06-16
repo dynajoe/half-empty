@@ -5,7 +5,8 @@ var ironio = require('node-ironio')('nfFVh41-R6ZkFU0SzGOgzJM9JCk'),
    calc = require('../lib/calculate'),
    peerindex = require('../lib/peerindex'),
    klout = require('../lib/klout'),
-   async = require('async');
+   async = require('async'),
+   moment = require('moment');
 
 var cleanTopicText = function (topics) {
    topics.forEach(function (t) {
@@ -58,12 +59,14 @@ module.exports = function (app) {
                ], function (err, results) {
                   var piTopics = results[0];
                   var kTopics = results[1];
+                  
+                  var sortedTweets = _.sortBy(tweets, function (t) { return -moment(t.created_at).valueOf(); });
 
                   var result =  {
                      user: user,
-                     scored: calc.score(tweets),
-                     tweets: tweets,
-                     history: calc.scoreHistory(90, tweets),
+                     scored: calc.score(sortedTweets),
+                     tweets: sortedTweets,
+                     history: calc.scoreHistory(90, sortedTweets),
                      topics: cleanTopicText(piTopics.concat(kTopics))
                   };
 
