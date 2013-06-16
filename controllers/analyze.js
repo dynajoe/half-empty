@@ -38,7 +38,6 @@ module.exports = function (app) {
       
       cache.get(twitter_handle, function (err, data) {
          if (data) {
-            console.log('Got some data for ' + twitter_handle);
             var parsed = JSON.parse(data);
             if (!parsed) {
                return res.end("");
@@ -46,7 +45,7 @@ module.exports = function (app) {
             var user = parsed.user;
             var tweets = parsed.tweets;
             var result;
-            console.log(tweets[0]);
+            console.log('Crunching ' + tweets.length + ' tweets for ' + twitter_handle);
             if (tweets) {
                async.parallel([
                   function (cb) { peerindex.getTopics(twitter_handle, cb); },
