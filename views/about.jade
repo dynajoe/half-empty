@@ -1,0 +1,27 @@
+extends layout
+      
+block content
+   .how-content
+      h3 How It Works
+      .how
+         :markdown
+            1. An [IronWorker](http://www.iron.io) is queued to analyze a user's tweets.
+            1. That worker will pull around 1000 of a user's most recent tweets.
+            1. Each of those tweets get analyzed by the [AlchemyAPI](http://www.alchemyapi.com/) for sentiment (whether that text is considered positive, negative, or neutral)
+            1. The tweets and their sentiments are stored in the key/value store, [IronCache](http://www.iron.io)
+            1. Once the worker is finished, we pull in some additional information from [Klout](http://www.klout.com) and [PeerIndex](http://www.peerindex.com) (both [Mashery APIs](http://www.mashery.com)). 
+            1. With all of the data in hand, we calculate the final score using a custom algorithm and display the results!
+      
+      .clear
+
+      .apis
+         h3 APIs
+         div
+            :markdown
+               * [iron.io](http://www.iron.io)
+               * [AlchemyAPI](http://www.alchemyapi.com)
+               * [Mashery](http://www.mashery.com)
+                  * [Klout](http://www.klout.com)
+                  * [PeerIndex](http://www.peerindex.com)
+
+      .clear.bottom
