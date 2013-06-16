@@ -30,19 +30,13 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
          }
          return;
       }
+      console.log('Retrieved ' + tweets.length + ' tweets for user ' + payload.handle);
       alchemy.analyzeTweets(tweets, function(err, analyzedTweets) {
          if(err) {
             console.error('Failed to analyze tweets for user: ' + payload.handle, err);
             process.exit(1);
          }
-         for (var i = analyzedTweets.length - 1; i >= 0; i--) {
-            console.log(JSON.stringify({ 
-               tweet: {
-                  text: analyzedTweets[i].text,
-                  sentiment: analyzedTweets[i].sentiment
-               }
-            }, null, 2));
-         };
+         console.log('Analyzed ' + analyzedTweets.length + ' tweets for user ' + payload.handle);
          twitterCache.put(payload.handle, JSON.stringify(tweets), function(err, msg) {
             if(err) {
                console.error('Failed to put to cache. ', err);
