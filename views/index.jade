@@ -8,7 +8,7 @@ block content
                fieldset 
                   label Twitter:
                      input(name="twitter_handle", type="text", placeholder="twitter handle")
-                  button(type="submit") Get Started
+                  button.button(type="submit") Get Started
          .pane.analyzing
             .loading
                .circle
@@ -16,7 +16,7 @@ block content
                p Analyzing...
       
       #start-over 
-         a(href="#") Start Over
+         a.button(href="#") Start Over
 
    #data.hide
       .header
@@ -27,6 +27,8 @@ block content
                span.location
                span.bio
             span.score
+               span.value
+               span.title
       .content
          .influencers
             h3 Influenced By

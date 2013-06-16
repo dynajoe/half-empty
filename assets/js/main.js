@@ -82,7 +82,18 @@ var setInfluencers = function (influencers) {
 };
 
 var setScore = function (score) {
-   $('#data .score').html(score);
+   if (score >= 0) {
+      var color = 'green';
+      var text = 'Half Full';
+   }
+   else {
+      var color = 'red';
+      var text = "Half Empty";
+   }
+
+   $('#data .score').css('background-color', color);
+   $('#data .score .value').html(score);
+   $('#data .score .title').html(text);
 };
 
 var hideData = function () {

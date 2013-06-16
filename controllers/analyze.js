@@ -37,6 +37,13 @@ module.exports = function (app) {
                
       var twitter_handle = req.params.handle;
       
+      if (!twitter_handle) {
+         res.writeHead(400);
+         return res.end('A twitter handle is required.');
+      }
+
+      twitter_handle = twitter_handle.toLowerCase().trim();
+
       cache.get(twitter_handle, function (err, data) {
          if (err) {
             res.writeHead(500);
