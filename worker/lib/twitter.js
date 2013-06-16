@@ -9,10 +9,31 @@ var twit = new twitter({
   access_token_secret: 'etIdekP6F3vAse8iD3K5nxKSQHyJZN8xiCbGLIIls'
 });
 
+function getUser(tweet) {
+   return tweet.user;
+}
+
+function getModifiedTweet(tweet) {
+   var modifiedTweet = { 
+      id: tweet.id,
+      created_at: tweet.created_at,
+      in_reply_to_user_id: tweet.in_reply_to_user_id,
+      in_reply_to_status_id: tweet.in_reply_to_status_id,
+      retweet_count: tweet.retweet_count,
+      favorite_count: tweet.favorite_count,
+      text: tweet.text,
+
+   };
+   if (tweet.retweeted_status) {
+      modifiedTweet.retweeted_status = tweet.retweeted_status;
+   }
+   return modifiedTweet;
+}
 module.exports.getTweets = function(handle, cb) {
    var oldestTweet;
    var lastOldestTweet;
    var tweets = [];
+   var user;
 
    async.until(
       function () {
@@ -28,11 +49,13 @@ module.exports.getTweets = function(handle, cb) {
          }
          twit.getUserTimeline(opts, function(err, data) {
             if (err) return callback(err);
-
+            if (!user) {
+               user = data[0].user;
+            }
             console.log('Twitter Paging: Retrieved ' + data.length + ' more tweets');
             for (var i = data.length - 1; i >= 0; i--) {
                if(oldestTweet && data[i].id === oldestTweet.id) continue;
-               tweets.push(data[i]);
+               tweets.push(getModifiedTweet(data[i]));
             };
             console.log('Twitter Paging: Now have retrieved ' + tweets.length + ' total tweets for user ' + handle);
             lastOldestTweet = oldestTweet;
@@ -45,7 +68,7 @@ module.exports.getTweets = function(handle, cb) {
             return cb(err);
          }
 
-         return cb(null, tweets);
+         return cb(null, { user: user, tweets: tweets});
       }
    );
 }

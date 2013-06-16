@@ -12,7 +12,7 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
       console.error('No twitter handle defined.');
       process.exit(1);
    }
-   twitter.getTweets(payload.handle, function(err, tweets) {
+   twitter.getTweets(payload.handle, function(err, data) {
       if(err) {
          if (err.statusCode == 404) {
             twitterCache.put(payload.handle, 'null', function(err, msg) {
@@ -30,14 +30,14 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
          }
          return;
       }
-      console.log('Retrieved ' + tweets.length + ' tweets for user ' + payload.handle);
-      alchemy.analyzeTweets(tweets, function(err, analyzedTweets) {
+      console.log('Retrieved ' + data.tweets.length + ' tweets for user ' + payload.handle);
+      alchemy.analyzeTweets(data.tweets, function(err, analyzedTweets) {
          if(err) {
             console.error('Failed to analyze tweets for user: ' + payload.handle, err);
             process.exit(1);
          }
          console.log('Analyzed ' + analyzedTweets.length + ' tweets for user ' + payload.handle);
-         twitterCache.put(payload.handle, JSON.stringify(tweets), function(err, msg) {
+         twitterCache.put(payload.handle, JSON.stringify(data), function(err, msg) {
             if(err) {
                console.error('Failed to put to cache. ', err);
                process.exit(1);
