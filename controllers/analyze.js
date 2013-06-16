@@ -3,7 +3,9 @@ var ironio = require('node-ironio')('nfFVh41-R6ZkFU0SzGOgzJM9JCk'),
    cache = project.caches('twitter'),
    _ = require('underscore'),
    calc = require('../lib/calculate'),
-   peerindex = require('../lib/peerindex');
+   peerindex = require('../lib/peerindex'),
+   klout = require('../lib/klout'),
+   async = require('async');
 
 var submitWorker = function (twitter_handle, callback) {
    project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify({ handle: twitter_handle }) }, function (err, res) {
@@ -50,13 +52,19 @@ module.exports = function (app) {
             var result;
 
             if (tweets) {
-               peerindex.getTopics(twitter_handle, function(err, topics) {
+               async.parallel([
+                  function (cb) { peerindex.getTopics(twitter_handle, cb); },
+                  function (cb) { klout.getTopics(twitter_handle, cb); }
+               ], function (err, results) {
+                  var piTopics = results[0];
+                  var kTopics = results[1];
+
                   result =  {
                      user: tweets[0].user,
                      scored: calc.score(tweets),
                      tweets: tweets,
                      history: calc.scoreHistory(90, tweets),
-                     topics: topics
+                     topics: piTopics.concat(kTopics)
                   };
 
                   res.end(JSON.stringify(result));
