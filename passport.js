@@ -9,12 +9,16 @@ passport.use(new TwitterStrategy({
    consumerSecret: TWITTER_CONSUMER_SECRET,
    callbackURL: "http://half-empty.herokuapp.com/auth/twitter/callback"
 }, function(token, tokenSecret, profile, done) {
-   done(null, { token: token, tokenSecret: tokenSecret, profile: profile });
+   done(null, { id: 1, token: token, tokenSecret: tokenSecret, profile: profile });
 }));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
 
 module.exports = function (app) {
    app.get('/auth/twitter', passport.authenticate('twitter'));
-   app.get('/auth/twitter/callback', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/login' }));
+   app.get('/auth/twitter/callback', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/' }));
 }
 
 
