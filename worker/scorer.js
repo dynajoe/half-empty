@@ -12,8 +12,12 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
       console.error('No twitter handle defined.');
       process.exit(1);
    }
+   
    var twitter_handle = payload.handle.toLowerCase().trim();
-   twitter.getTweets(twitter_handle, function(err, data) {
+   var twitter_api_secret = payload.twitter_api_secret
+   var twitter_api_token = payload.twitter_api_token;
+   
+   twitter.getTweets(twitter_handle, twitter_api_token, twitter_api_secret, function(err, data) {
       if(err) {
          if (err.statusCode == 404) {
             twitterCache.put(twitter_handle, 'null', function(err, msg) {
