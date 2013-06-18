@@ -1,18 +1,19 @@
-var ironio = require('node-ironio')('nfFVh41-R6ZkFU0SzGOgzJM9JCk')
-  , project = ironio.projects('51bbd144ed3d766cf3000ab6')
-  , twitterCache = project.caches('twitter')
-  , request = require('request')
+var request = require('request')
   , twitter = require('./lib/twitter')
   , alchemy = require('./lib/alchemy');
 
 console.log('Scoring Worker');
 
 require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
-   if(!payload.handle) {
+
+   if (!payload.handle) {
       console.error('No twitter handle defined.');
       process.exit(1);
    }
-   
+
+   var ironio = require('node-ironio')(payload.iron_token);
+   var project = ironio.projects(payload.iron_project);
+   var twitterCache = project.caches('twitter');
    var twitter_handle = payload.handle.toLowerCase().trim();
    var twitter_api_secret = payload.twitter_api_secret
    var twitter_api_token = payload.twitter_api_token;
