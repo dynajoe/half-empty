@@ -73,7 +73,7 @@ var setInfluencers = function (influencers) {
       $a.click(function (e) {
          e.preventDefault();
          showLoading();
-         History.pushState({handle:twitter_handle}, "Handle " + influencer, "?"+influencer);
+         History.pushState({handle:influencer}, "Handle " + influencer, "?"+influencer);
       });
 
       $container.append($a);
