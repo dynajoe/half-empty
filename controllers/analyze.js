@@ -1,12 +1,13 @@
-var ironio = require('node-ironio')('nfFVh41-R6ZkFU0SzGOgzJM9JCk'),
-   project = ironio.projects('51bbd144ed3d766cf3000ab6'),
-   cache = project.caches('twitter'),
-   _ = require('underscore'),
+var _ = require('underscore'),
    calc = require('../lib/calculate'),
    peerindex = require('../lib/peerindex'),
    klout = require('../lib/klout'),
    async = require('async'),
-   moment = require('moment');
+   moment = require('moment'),
+   config = require('../config'),
+   ironio = require('node-ironio')(config.IRON_TOKEN),
+   project = ironio.projects(config.IRON_PROJECT),
+   cache = project.caches('twitter');
 
 var cleanTopicText = function (topics) {
    topics.forEach(function (t) {
@@ -16,8 +17,23 @@ var cleanTopicText = function (topics) {
    return _.sortBy(topics, function (t) { return t.text; });
 };
 
-var submitWorker = function (twitter_handle, callback) {
-   project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify({ handle: twitter_handle }) }, function (err, res) {
+var submitWorker = function (twitter_handle, user, callback) {
+   user = user || { name: 'Half Empty Anonymous User' };
+
+   var payload = { 
+      handle: twitter_handle,
+      requested_by: user.name,
+      iron_project: config.IRON_PROJECT,
+      iron_token: config.IRON_TOKEN, 
+      twitter_consumer_key: config.TWITTER_CONSUMER_KEY,
+      twitter_consumer_secret: config.TWITTER_CONSUMER_SECRET,
+      twitter_user_api_secret: user.twitter_api_secret,
+      twitter_user_api_token: user.twitter_api_token,
+      twitter_api_secret: config.TWITTER_API_SECRET,
+      twitter_api_token: config.TWITTER_API_TOKEN
+   };
+
+   project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify(payload) }, function (err, res) {
       res = res || { tasks: [] };
       callback(err, res.tasks[0].id);
    });
@@ -32,7 +48,7 @@ module.exports = function (app) {
       });
    });
 
-   app.get('/analyze/:handle', function (req, res) {
+   app.get('/analyze/:handle', function (req, res, next) {
       res.setHeader('Content-Type', 'application/json');
                
       var twitter_handle = req.params.handle;
@@ -46,9 +62,7 @@ module.exports = function (app) {
 
       cache.get(twitter_handle, function (err, data) {
          if (err) {
-            res.writeHead(500);
-            res.end();
-            return;
+            return next(new Error(err));
          }
 
          if (data) {
@@ -90,7 +104,7 @@ module.exports = function (app) {
             }
          }
          else {
-            submitWorker(twitter_handle, function (err, id) {
+            submitWorker(twitter_handle, req.user, function (err, id) {
                res.end(JSON.stringify({ processing: true, id: id, err: err }));
             });
          }
