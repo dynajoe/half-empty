@@ -41,7 +41,7 @@ module.exports.getTweets = function (payload, cb) {
    };
 
    var appTokens = {
-      access_token_key: payload.twitter_api_secret,
+      access_token_key: payload.twitter_api_token,
       access_token_secret: payload.twitter_api_secret
    };
 
