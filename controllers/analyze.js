@@ -21,6 +21,7 @@ var submitWorker = function (twitter_handle, user, callback) {
    user = user || { name: 'Half Empty Anonymous User' };
 
    var payload = { 
+      id: new Date().getTime(),
       handle: twitter_handle,
       requested_by: user.name,
       iron_project: config.IRON_PROJECT,
@@ -33,14 +34,15 @@ var submitWorker = function (twitter_handle, user, callback) {
       twitter_api_token: config.TWITTER_API_TOKEN
    };
 
+   console.log("Sending Payload: ", payload);
+
    project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify(payload) }, function (err, res) {
       res = res || { tasks: [] };
       callback(err, res.tasks[0].id);
    });
 };
 
-module.exports = function (app) {
-   
+module.exports = function (app) {  
    app.get('/clear/:handle', function (req, res) {
       cache.del(req.params.handle, function (err, data) {
          res.redirect('/');

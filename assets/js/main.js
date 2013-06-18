@@ -335,14 +335,13 @@ $(document).ready(function () {
       
       var twitter_handle = $('input[name=twitter_handle]').val();
       
-      History.pushState({handle:twitter_handle}, "Handle " + twitter_handle, "?"+twitter_handle);
+      History.pushState({ handle:twitter_handle }, "Handle " + twitter_handle, "?"+twitter_handle);
    });
 
-   (function(window,undefined){
+   (function(window,undefined) {
       History.Adapter.bind(window,'statechange',function(){
          var state = History.getState();
-         console.log(state);
-         $('input[name=twitter_handle]').val('');
+
          if (state.data.handle) {
             loadUser(state.data.handle);
          }
@@ -351,9 +350,15 @@ $(document).ready(function () {
          }
       });
 
-      var initial = History.getState();
-      if (initial.data.handle) {
-         loadUser(initial.data.handle);
+      var state = History.getState();
+
+      if (state.data.handle) {
+         var twitter_handle = state.data.handle;
+         loadUser(twitter_handle);
+      } else if (state.hash.indexOf("/?") > -1) {
+         var twitter_handle = state.hash.replace(/\/\?/, '').split(/&|=/)[0];
+         History.pushState({ handle:twitter_handle }, "Handle " + twitter_handle, "?"+twitter_handle);
       }
+
    })(window);
 });
