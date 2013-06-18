@@ -44,7 +44,7 @@ var submitWorker = function (twitter_handle, user, callback) {
 
 module.exports = function (app) {  
    app.get('/clear/:handle', function (req, res) {
-      cache.del(req.params.handle, function (err, data) {
+      cache.del(req.params.handle.toLowerCase(), function (err, data) {
          res.redirect('/');
          res.end();
       });
