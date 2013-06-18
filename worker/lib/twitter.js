@@ -29,29 +29,23 @@ function getModifiedTweet(tweet) {
 
 module.exports.getTweets = function (payload, cb) {
    var twitter_handle = payload.handle.toLowerCase().trim();
-   var twitter_consumer_key = payload.twitter_consumer_key;
-   var twitter_consumer_secret = payload.twitter_consumer_secret;
-   var twitter_api_secret = payload.twitter_api_secret;
-   var twitter_api_token = payload.twitter_api_token;
-   
+
    var oldestTweet;
    var lastOldestTweet;
    var tweets = [];
    var user;
 
-   var twit = new twitter({
-      consumer_key: twitter_consumer_key,
-      consumer_secret: twitter_consumer_secret,
-      access_token_key: twitter_api_token,
-      access_token_secret: twitter_api_secret
-   });
+   var twitConfig = {
+      consumer_key: payload.twitter_consumer_key,
+      consumer_secret: payload.twitter_consumer_secret,
+      access_token_key: payload.twitter_api_token,
+      access_token_secret: payload.twitter_api_secret
+   };
 
-   console.log({
-      consumer_key: twitter_consumer_key,
-      consumer_secret: twitter_consumer_secret,
-      access_token_key: twitter_api_token,
-      access_token_secret: twitter_api_secret
-   });
+   console.log(twitConfig);
+
+   var twit = new twitter(twitConfig);
+
    async.until(
       function () {
          return tweets.length > 800 || (oldestTweet && lastOldestTweet && oldestTweet.id === lastOldestTweet.id);
