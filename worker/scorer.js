@@ -6,6 +6,8 @@ console.log('Scoring Worker');
 
 require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
 
+   consone.log("Payload: ", payload);
+
    if (!payload.handle) {
       console.error('No twitter handle defined.');
       process.exit(1);

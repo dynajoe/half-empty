@@ -34,7 +34,7 @@ module.exports.getTweets = function (payload, cb) {
    var lastOldestTweet;
    var tweets = [];
    var user;
-   
+
    var userTokens = {
       access_token_key: payload.twitter_user_api_token,
       access_token_secret: payload.twitter_user_api_secret
@@ -52,6 +52,7 @@ module.exports.getTweets = function (payload, cb) {
       access_token_secret: userTokens.access_token_secret || appTokens.access_token_secret
    };
 
+   console.log("Requesting: " + twitter_handle);
    console.log("Requested By: " + payload.requested_by);
    console.log("User config: ", userTokens);
    console.log("App config: ", appTokens);

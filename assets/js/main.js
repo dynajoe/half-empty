@@ -342,6 +342,7 @@ $(document).ready(function () {
       History.Adapter.bind(window,'statechange',function(){
          var state = History.getState();
          console.log(state);
+         $('input[name=twitter_handle]').val('');
          if (state.data.handle) {
             loadUser(state.data.handle);
          }
