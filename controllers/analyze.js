@@ -16,8 +16,14 @@ var cleanTopicText = function (topics) {
    return _.sortBy(topics, function (t) { return t.text; });
 };
 
-var submitWorker = function (twitter_handle, callback) {
-   project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify({ handle: twitter_handle }) }, function (err, res) {
+var submitWorker = function (twitter_handle, token, secret, callback) {
+   var payload = { 
+      handle: twitter_handle,
+      twitter_api_secret: secret,
+      twitter_api_token: token
+   };
+
+   project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify(payload) }, function (err, res) {
       res = res || { tasks: [] };
       callback(err, res.tasks[0].id);
    });
@@ -90,7 +96,11 @@ module.exports = function (app) {
             }
          }
          else {
-            submitWorker(twitter_handle, function (err, id) {
+            req.user = req.user || {};
+            var secret = req.user.twitter_api_secret;
+            var token = req.user.twitter_api_token;
+
+            submitWorker(twitter_handle, token, secret, function (err, id) {
                res.end(JSON.stringify({ processing: true, id: id, err: err }));
             });
          }
