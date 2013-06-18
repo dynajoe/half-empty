@@ -77,7 +77,7 @@ module.exports.getTweets = function (payload, cb) {
             if (err) return callback(err);
             if (data.length === 0) {
                done = true;
-               callback();
+               return callback();
             }
             if (!user) {
                if (data[0]) {
