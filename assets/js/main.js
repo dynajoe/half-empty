@@ -299,7 +299,7 @@ var loadUser = function (twitter_handle) {
          } else {
             return setTimeout(function () { 
                checkTask(id); 
-            }, 250);  
+            }, 1000);  
          }
       });
    };

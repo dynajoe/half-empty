@@ -23,6 +23,9 @@ function parse_payload(args, cb) {
             console.error("Could not open file: %s", err);
             process.exit(1);
         }
+        
+        console.log("Payload File Contents: ", data.toString());
+
         cb(JSON.parse(data));
     });
 }

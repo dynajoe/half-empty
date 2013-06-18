@@ -2,6 +2,7 @@ var request = require('request')
   , twitter = require('./lib/twitter')
   , alchemy = require('./lib/alchemy');
 
+console.log('Process Arguments: ', process.argv);
 console.log('Scoring Worker');
 
 require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
