@@ -32,6 +32,7 @@ module.exports.getTweets = function (payload, cb) {
 
    var oldestTweet;
    var lastOldestTweet;
+   var done = false;
    var tweets = [];
    var user;
 
@@ -62,7 +63,7 @@ module.exports.getTweets = function (payload, cb) {
 
    async.until(
       function () {
-         return tweets.length > 800 || (oldestTweet && lastOldestTweet && oldestTweet.id === lastOldestTweet.id);
+         return tweets.length > 800 || done || (oldestTweet && lastOldestTweet && oldestTweet.id === lastOldestTweet.id);
       },
       function (callback) {
          var opts = {
@@ -74,6 +75,10 @@ module.exports.getTweets = function (payload, cb) {
          }
          twit.getUserTimeline(opts, function(err, data) {
             if (err) return callback(err);
+            if (data.length === 0) {
+               done = true;
+               callback();
+            }
             if (!user) {
                if (data[0]) {
                  user = data[0].user;
