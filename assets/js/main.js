@@ -1,3 +1,4 @@
+
 var showUserNotFound = function () {
    $('.form').removeClass('hide');
 };
@@ -285,6 +286,7 @@ var createChart = function (history) {
 
 var loadUser = function (twitter_handle) {
 
+   $('.form').addClass('hide');
    $('.analyze-for').html(twitter_handle);
    
    var checkTask = function (id) {
@@ -325,7 +327,7 @@ $(document).ready(function () {
    $('#start-over a').click(function (e) {
       e.preventDefault();
       $('input[name=twitter_handle]').val('');
-      hideData();
+      History.pushState({}, "Home", "?");
    });
 
    $('#gather-wrapper form').submit(function (e) {
@@ -333,11 +335,23 @@ $(document).ready(function () {
       
       var twitter_handle = $('input[name=twitter_handle]').val();
       
-      $('.form').addClass('hide');
-      
-      loadUser(twitter_handle);
+      History.pushState({handle:twitter_handle}, "Handle " + twitter_handle, "?"+twitter_handle);
    });
+   (function(window,undefined){
+      History.Adapter.bind(window,'statechange',function(){
+         var state = History.getState();
+         console.log(state);
+         if (state.data.handle) {
+            loadUser(state.data.handle);
+         }
+         else {
+            hideData();
+         }
+      });
 
-   //$('input[name=twitter_handle]').val('smerchek');
-   //$('#gather form').submit();
+      var initial = History.getState();
+      if (initial.data.handle) {
+         loadUser(initial.data.handle);
+      }
+   })(window);
 });
