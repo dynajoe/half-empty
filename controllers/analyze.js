@@ -18,26 +18,19 @@ var cleanTopicText = function (topics) {
 };
 
 var submitWorker = function (twitter_handle, user, callback) {
-   twitter_handle = twitter_handle.trim().toLowerCase();
    user = user || { name: 'Half Empty Anonymous User' };
-
-   if (user.name == twitter_handle) {
-      var twitter_api_token = user.twitter_api_token;
-      var twitter_api_secret = user.twitter_api_secret; 
-   } else {
-      var twitter_api_token  = config.TWITTER_API_TOKEN;
-      var twitter_api_secret = config.TWITTER_API_SECRET;
-   }
 
    var payload = { 
       handle: twitter_handle,
-      requested_by: user,
+      requested_by: user.name,
       iron_project: config.IRON_PROJECT,
       iron_token: config.IRON_TOKEN, 
       twitter_consumer_key: config.TWITTER_CONSUMER_KEY,
       twitter_consumer_secret: config.TWITTER_CONSUMER_SECRET,
-      twitter_api_secret: twitter_api_secret,
-      twitter_api_token: twitter_api_token
+      twitter_user_api_secret: user.twitter_api_secret,
+      twitter_user_api_token: user.twitter_api_token,
+      twitter_api_secret: config.TWITTER_API_SECRET,
+      twitter_api_token: config.TWITTER_API_TOKEN
    };
 
    project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify(payload) }, function (err, res) {

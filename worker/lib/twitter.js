@@ -34,15 +34,28 @@ module.exports.getTweets = function (payload, cb) {
    var lastOldestTweet;
    var tweets = [];
    var user;
+   
+   var userTokens = {
+      access_token_key: payload.twitter_user_api_token,
+      access_token_secret: payload.twitter_user_api_secret
+   };
+
+   var appTokens = {
+      access_token_key: payload.twitter_api_secret,
+      access_token_secret: payload.twitter_api_secret
+   };
 
    var twitConfig = {
       consumer_key: payload.twitter_consumer_key,
       consumer_secret: payload.twitter_consumer_secret,
-      access_token_key: payload.twitter_api_token,
-      access_token_secret: payload.twitter_api_secret
+      access_token_key: userTokens.access_token_key || appTokens.access_token_key,
+      access_token_secret: userTokens.access_token_secret || appTokens.access_token_secret
    };
 
-   console.log(twitConfig);
+   console.log("Requested By: " + payload.requested_by);
+   console.log("User config: ", userTokens);
+   console.log("App config: ", appTokens);
+   console.log("Twitter config: ", twitConfig);
 
    var twit = new twitter(twitConfig);
 
