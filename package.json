@@ -15,7 +15,8 @@
     "async": "~0.2.9",
     "markdown": "~0.4.0",
     "passport": "~0.1.17",
-    "passport-twitter": "~0.1.5"
+    "passport-twitter": "~0.1.5",
+    "winston": "~0.7.2"
   },
   "engines": {
     "node": "0.8.1",

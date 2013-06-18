@@ -18,6 +18,7 @@ app.use(express.session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
+app.use(express.logger({ format: ':method :url :status' }));
 
 require('./passport')(app);
 require('./controllers/home')(app);

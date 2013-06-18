@@ -9,20 +9,24 @@ passport.use(new TwitterStrategy({
    consumerSecret: TWITTER_CONSUMER_SECRET,
    callbackURL: TWITTER_CALLBACK_URL
 }, 
-function(token, secret, profile, done) {
-   return done(null, { 
+function (token, secret, profile, done) {
+   var user = { 
       id: profile.id, 
+      name: profile.username,
+      protected: profile["_json"].protected,
       twitter_api_token: token, 
       twitter_api_secret: secret, 
       profile: profile 
-   });
+   };
+
+   return done(null, user);
 }));
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
    done(null, user);
 });
 
