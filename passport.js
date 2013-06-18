@@ -1,8 +1,8 @@
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
-var TWITTER_CONSUMER_KEY = process.env.TWITTER_CONSUMER_KEY;
-var TWITTER_CONSUMER_SECRET = process.env.TWITTER_CONSUMER_SECRET;
-var TWITTER_CALLBACK_URL = process.env.TWITTER_CALLBACK_URL || 'http://localhost:3000/auth/twitter/callback';
+var TWITTER_CONSUMER_KEY = process.env.HE_TWITTER_CONSUMER_KEY;
+var TWITTER_CONSUMER_SECRET = process.env.HE_TWITTER_CONSUMER_SECRET;
+var TWITTER_CALLBACK_URL = process.env.HE_TWITTER_CALLBACK_URL || 'http://localhost:3000/auth/twitter/callback';
 
 passport.use(new TwitterStrategy({
    consumerKey: TWITTER_CONSUMER_KEY,

@@ -1,12 +1,14 @@
-var ironio = require('node-ironio')('nfFVh41-R6ZkFU0SzGOgzJM9JCk'),
-   project = ironio.projects('51bbd144ed3d766cf3000ab6'),
-   cache = project.caches('twitter'),
-   _ = require('underscore'),
+var _ = require('underscore'),
    calc = require('../lib/calculate'),
    peerindex = require('../lib/peerindex'),
    klout = require('../lib/klout'),
    async = require('async'),
-   moment = require('moment');
+   moment = require('moment'),
+   IRON_PROJECT = process.env.HE_IRON_PROJECT_ID,
+   IRON_TOKEN = process.env.HE_IRON_TOKEN,
+   ironio = require('node-ironio')(IRON_TOKEN),
+   project = ironio.projects(IRON_PROJECT),
+   cache = project.caches('twitter');
 
 var cleanTopicText = function (topics) {
    topics.forEach(function (t) {
@@ -20,7 +22,9 @@ var submitWorker = function (twitter_handle, token, secret, callback) {
    var payload = { 
       handle: twitter_handle,
       twitter_api_secret: secret,
-      twitter_api_token: token
+      twitter_api_token: token,
+      iron_project: IRON_PROJECT,
+      iron_token: IRON_TOKEN, 
    };
 
    project.tasks.queue({ code_name: 'scorer', payload: JSON.stringify(payload) }, function (err, res) {

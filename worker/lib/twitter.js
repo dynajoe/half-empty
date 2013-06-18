@@ -27,17 +27,23 @@ function getModifiedTweet(tweet) {
    return modifiedTweet;
 }
 
-module.exports.getTweets = function(handle, token, secret, cb) {
+module.exports.getTweets = function (payload) {
+   var twitter_handle = payload.handle.toLowerCase().trim();
+   var twitter_consumer_key = payload.twitter_consumer_key;
+   var twitter_consumer_secret = payload.twitter_consumer_secret;
+   var twitter_api_secret = payload.twitter_api_secret;
+   var twitter_api_token = payload.twitter_api_token;
+   
    var oldestTweet;
    var lastOldestTweet;
    var tweets = [];
    var user;
 
    var twit = new twitter({
-      consumer_key: 'HiRj7aQ8hPXsXYBEW8LMKg',
-      consumer_secret: 'a0c9gAQ2gFWP4CkXQrgnAKokrVHZQ6eFCe9dTjM2Pe4',
-      access_token_key: token,
-      access_token_secret: secret
+      consumer_key: twitter_consumer_key,
+      consumer_secret: twitter_consumer_secret,
+      access_token_key: twitter_api_token,
+      access_token_secret: twitter_api_secret
    });
 
    async.until(
@@ -46,7 +52,7 @@ module.exports.getTweets = function(handle, token, secret, cb) {
       },
       function (callback) {
          var opts = {
-            screen_name: handle,
+            screen_name: twitter_handle,
             count: 800
          };
          if (oldestTweet) {
@@ -62,7 +68,7 @@ module.exports.getTweets = function(handle, token, secret, cb) {
                if(oldestTweet && data[i].id === oldestTweet.id) continue;
                tweets.push(getModifiedTweet(data[i]));
             };
-            console.log('Twitter Paging: Now have retrieved ' + tweets.length + ' total tweets for user ' + handle);
+            console.log('Twitter Paging: Now have retrieved ' + tweets.length + ' total tweets for user ' + twitter_handle);
             lastOldestTweet = oldestTweet;
             oldestTweet = data[data.length - 1];
             callback();
