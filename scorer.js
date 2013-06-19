@@ -1,8 +1,32 @@
-var moment = require('moment')
-  , _ = require('underscore'),
-  child_process = require('child_process');
+var moment = require('moment');
+var _ = require('underscore');
+var config = require('./config');
+var ironio = require('node-ironio')(config.IRON_TOKEN);
+var project = ironio.projects(config.IRON_PROJECT);
+var cache = project.caches('twitter');
 
-module.exports.scoreHistory = function(numberOfDays, tweets) {
+var twitter_handle = process.argv[2];
+
+cache.get(twitter_handle, function (err, data) {
+   if (!err && data) {
+      var parsed = JSON.parse(data);
+      
+      if (parsed && parsed.tweets) {
+         var user = parsed.user;
+         var tweets = parsed.tweets;
+         var sortedTweets = _.sortBy(tweets, function (t) { return -moment(t.created_at).valueOf(); });
+
+         console.log(JSON.stringify(score(tweets)));
+
+         return process.exit(0);
+      }
+   }
+   
+   console.log('Error scoring tweets for ' + twitter_handle);
+   return process.exit(1);
+});
+
+var scoreHistory = function(numberOfDays, tweets) {
    var scoresOverTime = [];
    for (var i = numberOfDays - 1; i >= 0; i--) {
       var date = moment().subtract('days', i);
@@ -12,33 +36,20 @@ module.exports.scoreHistory = function(numberOfDays, tweets) {
    return { start: moment().subtract('days', numberOfDays - 1).valueOf(), data: scoresOverTime };
 }
 
-module.exports.score = function(twitter_handle, callback) {
-   var child = child_process.spawn('node', ['scorer.js', twitter_handle]);
-   var output = '';
+var score = function(tweets) {
+   var scoreData = scoreFromDate(moment(), tweets);
+   scoreData.overallScore = Math.round(scoreData.overallScore);
+   return scoreData;
+}
 
-   child.stdout.on('data', function (data) {
-      output += data.toString();
-   });
-
-   child.on('close', function (code) {
-      console.log('Child process exited with code ' + code + '\n' + output);
-      
-      if (code == 0) {
-         callback(null, JSON.parse(output));
-      } else {
-         callback(new Error(output));
-      }
-   });
-};
-
-module.exports.scoreFromDate = scoreFromDate = function(fromDate, tweets) {
+var scoreFromDate = scoreFromDate = function(fromDate, tweets) {
    log('From Date: ' + fromDate.fromNow());
    var sum = 0;
    var count = 0;
    var positiveInfluencers = [];
    var negativeInfluencers = [];
    var min_index = 0;
-
+   
    for (var i = tweets.length - 1; i >= 0; i--) {
       if (getAge(fromDate, tweets[i]) < 0) {
          min_index = i + 1;
@@ -73,7 +84,7 @@ module.exports.scoreFromDate = scoreFromDate = function(fromDate, tweets) {
    };
 }
 
-module.exports.getBubbleData = function(tweets) {
+var getBubbleData = function(tweets) {
    var data = [];
    var fromDate = moment();
    for (var i = tweets.length - 1; i >= 0; i--) {

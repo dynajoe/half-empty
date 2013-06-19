@@ -86,18 +86,21 @@ module.exports = function (app) {
                   var influencers = results[2] || [];
                   
                   var sortedTweets = _.sortBy(tweets, function (t) { return -moment(t.created_at).valueOf(); });
+                  
+                  calc.score(twitter_handle, function (err, score) {
+                     var result =  {
+                        user: user,
+                        scored: score,
+                        tweets: sortedTweets,
+                        history: calc.scoreHistory(90, sortedTweets),
+                        topics: cleanTopicText(piTopics.concat(kTopics)),
+                        influencers: influencers,
+                        bubble: calc.getBubbleData(sortedTweets)
+                     };
 
-                  var result =  {
-                     user: user,
-                     scored: calc.score(sortedTweets),
-                     tweets: sortedTweets,
-                     history: calc.scoreHistory(90, sortedTweets),
-                     topics: cleanTopicText(piTopics.concat(kTopics)),
-                     influencers: influencers,
-                     bubble: calc.getBubbleData(sortedTweets)
-                  };
+                     res.end(JSON.stringify(result));
+                  });
 
-                  res.end(JSON.stringify(result));
                });
             }
             else {
