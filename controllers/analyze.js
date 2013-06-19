@@ -74,33 +74,35 @@ module.exports = function (app) {
                var user = parsed.user;
                var tweets = parsed.tweets;
 
-               console.log('Crunching ' + tweets.length + ' for ' + twitter_handle);
-
                async.parallel([
                   function (cb) { peerindex.getTopics(twitter_handle, cb); },
                   function (cb) { klout.getTopics(twitter_handle, cb); },
-                  function (cb) { klout.getInfluencers(twitter_handle, cb); }
+                  function (cb) { klout.getInfluencers(twitter_handle, cb); },
+                  function (cb) { calc.history(90, twitter_handle, cb); },
+                  function (cb) { calc.score(twitter_handle, cb); },
+                  function (cb) { calc.getBubbleData(twitter_handle, cb); },
+                  
                ], function (err, results) {
                   var piTopics = results[0] || [];
                   var kTopics = results[1] || [];
                   var influencers = results[2] || [];
-                  
-                  var sortedTweets = _.sortBy(tweets, function (t) { return -moment(t.created_at).valueOf(); });
-                  
-                  calc.score(twitter_handle, function (err, score) {
-                     var result =  {
-                        user: user,
-                        scored: score,
-                        tweets: sortedTweets,
-                        history: calc.scoreHistory(90, sortedTweets),
-                        topics: cleanTopicText(piTopics.concat(kTopics)),
-                        influencers: influencers,
-                        bubble: calc.getBubbleData(sortedTweets)
-                     };
+                  var history = results[3] || {};
+                  var scored = results[4] || {};
+                  var bubbleData = results[5] || [];
 
-                     res.end(JSON.stringify(result));
-                  });
+                  var tweets = [];
 
+                  var result =  {
+                     user: user,
+                     scored: scored,
+                     tweets: tweets,
+                     history: history,
+                     topics: cleanTopicText(piTopics.concat(kTopics)),
+                     influencers: influencers,
+                     bubble: bubbleData
+                  };
+
+                  res.end(JSON.stringify(result));
                });
             }
             else {

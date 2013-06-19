@@ -4,45 +4,108 @@ var config = require('./config');
 var ironio = require('node-ironio')(config.IRON_TOKEN);
 var project = ironio.projects(config.IRON_PROJECT);
 var cache = project.caches('twitter');
+var methods = {};
 
-var twitter_handle = process.argv[2];
-
-cache.get(twitter_handle, function (err, data) {
-   if (!err && data) {
-      var parsed = JSON.parse(data);
-      
-      if (parsed && parsed.tweets) {
-         var user = parsed.user;
-         var tweets = parsed.tweets;
-         var sortedTweets = _.sortBy(tweets, function (t) { return -moment(t.created_at).valueOf(); });
-
-         console.log(JSON.stringify(score(tweets)));
-
-         return process.exit(0);
-      }
-   }
+methods['history'] = function (args) {
+   var numberOfDays = args[1] || 90;
+   var twitter_handle = args[0];
    
-   console.log('Error scoring tweets for ' + twitter_handle);
-   return process.exit(1);
-});
+   getTweets(twitter_handle, function (err, tweets) {
+      var scoresOverTime = [];
+      
+      for (var i = numberOfDays - 1; i >= 0; i--) {
+         var date = moment().subtract('days', i);
+         var score = scoreFromDate(date, tweets);
+         scoresOverTime.push(score.overallScore);
+      };
+      
+      var result = { start: moment().subtract('days', numberOfDays - 1).valueOf(), data: scoresOverTime };
 
-var scoreHistory = function(numberOfDays, tweets) {
-   var scoresOverTime = [];
-   for (var i = numberOfDays - 1; i >= 0; i--) {
-      var date = moment().subtract('days', i);
-      var score = scoreFromDate(date, tweets);
-      scoresOverTime.push(score.overallScore);
-   };
-   return { start: moment().subtract('days', numberOfDays - 1).valueOf(), data: scoresOverTime };
-}
+      console.log(JSON.stringify(result));
+      return process.exit(0);
+   });
+};
 
-var score = function(tweets) {
-   var scoreData = scoreFromDate(moment(), tweets);
-   scoreData.overallScore = Math.round(scoreData.overallScore);
-   return scoreData;
-}
+methods['score'] = function (args) {
+   var twitter_handle = args[0];
+   
+   getTweets(twitter_handle, function (err, tweets) {
+      if (err) {
+         console.log(err);
+         return process.exit(1);
+      }
 
-var scoreFromDate = scoreFromDate = function(fromDate, tweets) {
+      var scoreData = scoreFromDate(moment(), tweets);
+      scoreData.overallScore = Math.round(scoreData.overallScore);
+      
+      console.log(JSON.stringify(scoreData));
+
+      return process.exit(0);
+   });
+};
+
+methods['details'] = function () {
+   console.log('One of score or history');
+   return process.exit(0);
+};
+
+methods['getBubbleData'] = function (args) {
+   var twitter_handle = args[0];
+   
+   getTweets(twitter_handle, function (err, tweets) {
+      if (err) {
+         console.log(err);
+         process.exit(1);
+      }
+
+      var data = [];
+      var fromDate = moment();
+      
+      for (var i = tweets.length - 1; i >= 0; i--) {
+
+         var tweetsAgo = i;
+         var tweetScore = getTweetScore(fromDate, tweets[i], tweetsAgo);
+         
+         if (typeof tweetScore === 'undefined') continue;
+         if (Math.abs(tweetScore.score) < 0.05) continue;
+         data.push({ 
+            x: moment(tweets[i].created_at).valueOf(), 
+            y: tweetScore.score, 
+            z: Math.abs(tweetScore.sentimentScore),
+            color: tweetScore.sentimentScore < 0 ? "#BD140E" : "#319638",
+            fillColor: tweetScore.sentimentScore < 0 ? "rgba(189, 20, 14, 0.1)" : "rgba(49, 150, 56, 0.1)",
+            tweetText: tweets[i].text,
+            daysAgo: moment(tweets[i].created_at).format("dddd, MMMM Do YYYY, h:mm:ss a"),
+            sentimentScore: tweetScore.sentimentScore.toFixed(2),
+            prettyScore: tweetScore.score.toFixed(2)
+         });
+      };
+
+      console.log(JSON.stringify(data));
+      process.exit(0);
+   });
+};
+
+methods[process.argv[2] || 'details'](process.argv.slice(3));
+
+function getTweets (twitter_handle, callback) {
+   cache.get(twitter_handle, function (err, data) {
+      if (err) return callback(err);
+
+      if (!err && data) {
+         var parsed = JSON.parse(data);
+         
+         if (parsed && parsed.tweets) {
+            var sortedTweets = _.sortBy(parsed.tweets, function (t) { return -moment(t.created_at).valueOf(); });
+            return callback(null, sortedTweets);
+         }
+      } else {
+         return callback('Unable to parse tweets');
+      }
+   });
+};
+
+var scoreFromDate = function(fromDate, tweets) {
    log('From Date: ' + fromDate.fromNow());
    var sum = 0;
    var count = 0;
@@ -82,32 +145,6 @@ var scoreFromDate = scoreFromDate = function(fromDate, tweets) {
       positiveInfluencers: positiveInfluencers,
       negativeInfluencers: negativeInfluencers
    };
-}
-
-var getBubbleData = function(tweets) {
-   var data = [];
-   var fromDate = moment();
-   for (var i = tweets.length - 1; i >= 0; i--) {
-
-      var tweetsAgo = i;
-      var tweetScore = getTweetScore(fromDate, tweets[i], tweetsAgo);
-      
-      if (typeof tweetScore === 'undefined') continue;
-      if (Math.abs(tweetScore.score) < 0.05) continue;
-      data.push({ 
-         x: moment(tweets[i].created_at).valueOf(), 
-         y: tweetScore.score, 
-         z: Math.abs(tweetScore.sentimentScore),
-         color: tweetScore.sentimentScore < 0 ? "#BD140E" : "#319638",
-         fillColor: tweetScore.sentimentScore < 0 ? "rgba(189, 20, 14, 0.1)" : "rgba(49, 150, 56, 0.1)",
-         tweetText: tweets[i].text,
-         daysAgo: moment(tweets[i].created_at).format("dddd, MMMM Do YYYY, h:mm:ss a"),
-         sentimentScore: tweetScore.sentimentScore.toFixed(2),
-         prettyScore: tweetScore.score.toFixed(2)
-      });
-   };
-
-   return data;
 }
 
 function updateInfluencers(influencers, tweet, score) {
