@@ -19,6 +19,7 @@ var createTweet = function (tweet) {
 
   var text = twttr.txt.autoLink(tweet.text);
   span.html(text);
+  span.append('<div class="date">' + moment(tweet.created_at).format('MMMM Do YYYY, h:mm a') + '</div>')
 
   return span;
 };
