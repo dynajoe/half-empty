@@ -20,7 +20,7 @@ var createTweet = function (twitter_handle, tweet) {
   var text = twttr.txt.autoLink(tweet.text);
   span.html(text);
   span.append('<div class="date">' + moment(tweet.created_at).format('MMMM Do YYYY, h:mm a') + '</div>')
-  span.append('<a href="https://twitter.com/' + twitter_handle + '/status/' + tweet.id +'" class="view-tweet">details</a>');
+  span.append('<a target="_blank" title="View on Twitter" href="https://twitter.com/' + twitter_handle + '/status/' + tweet.id +'" class="view-tweet">details</a>');
   return span;
 };
 
@@ -344,7 +344,7 @@ $(document).ready(function () {
          var state = History.getState();
 
          if (state.data.handle) {
-            loadUser(state.data.handle);
+            loadUser(state.data.handle.replace("@", ""));
          }
          else {
             hideData();
@@ -357,8 +357,11 @@ $(document).ready(function () {
          var twitter_handle = state.data.handle;
          loadUser(twitter_handle);
       } else if (state.hash.indexOf("/?") > -1) {
-         var twitter_handle = state.hash.replace(/\/\?/, '').split(/&|=/)[0];
-         History.pushState({ handle:twitter_handle }, "Handle " + twitter_handle, "?"+twitter_handle);
+         var twitter_handle = (state.hash.replace(/\/\?/, '').split(/&|=/)[0] || "").replace("@", "");
+
+         if (twitter_handle) {
+            History.pushState({ handle:twitter_handle }, "Handle " + twitter_handle, "?"+twitter_handle); 
+         }
       }
 
    })(window);
