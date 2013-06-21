@@ -72,6 +72,7 @@ methods['getBubbleData'] = function (args) {
             x: moment(tweets[i].created_at).valueOf(), 
             y: tweetScore.score, 
             z: Math.abs(tweetScore.sentimentScore),
+            id: tweets[i].id,
             color: tweetScore.sentimentScore < 0 ? "#BD140E" : "#319638",
             fillColor: tweetScore.sentimentScore < 0 ? "rgba(189, 20, 14, 0.1)" : "rgba(49, 150, 56, 0.1)",
             tweetText: tweets[i].text,

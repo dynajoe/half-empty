@@ -11,7 +11,7 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
 
    if (!payload.handle) {
       console.error('No twitter handle defined.');
-      process.exit(1);
+      return process.exit(1);
    }
 
    var ironio = require('node-ironio')(payload.iron_token);

@@ -8,7 +8,10 @@ function getUser(tweet) {
 
 function getModifiedTweet(tweet) {
    var modifiedTweet = { 
-      id: tweet.id,
+      id: tweet.id_str,
+      screen_name: tweet.screen_name,
+      geo: tweet.geo,
+      coordinates: tweet.coordinates,
       created_at: tweet.created_at,
       in_reply_to_user_id: tweet.in_reply_to_user_id,
       in_reply_to_status_id: tweet.in_reply_to_status_id,
@@ -19,7 +22,7 @@ function getModifiedTweet(tweet) {
    };
    if (tweet.retweeted_status) {
       modifiedTweet.retweeted_status = {
-         id: tweet.retweeted_status.id,
+         id: tweet.retweeted_status.id_str,
          screen_name: tweet.retweeted_status.screen_name,
          created_at: tweet.retweeted_status.created_at
       };
@@ -63,7 +66,7 @@ module.exports.getTweets = function (payload, cb) {
 
    async.until(
       function () {
-         return tweets.length > 800 || done || (oldestTweet && lastOldestTweet && oldestTweet.id === lastOldestTweet.id);
+         return tweets.length > 800 || done || (oldestTweet && lastOldestTweet && oldestTweet.id_str === lastOldestTweet.id_str);
       },
       function (callback) {
          var opts = {
@@ -71,7 +74,7 @@ module.exports.getTweets = function (payload, cb) {
             count: 800
          };
          if (oldestTweet) {
-            opts.max_id = oldestTweet.id;
+            opts.max_id = oldestTweet.id_str;
          }
          twit.getUserTimeline(opts, function(err, data) {
             if (err) return callback(err);
@@ -86,7 +89,7 @@ module.exports.getTweets = function (payload, cb) {
             }
             console.log('Twitter Paging: Retrieved ' + data.length + ' more tweets');
             for (var i = data.length - 1; i >= 0; i--) {
-               if(oldestTweet && data[i].id === oldestTweet.id) continue;
+               if(oldestTweet && data[i].id_str === oldestTweet.id_str) continue;
                tweets.push(getModifiedTweet(data[i]));
             };
             console.log('Twitter Paging: Now have retrieved ' + tweets.length + ' total tweets for user ' + twitter_handle);

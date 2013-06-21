@@ -10,7 +10,7 @@ var setUser = function (user) {
    $('#data img.avatar').attr('src', user.profile_image_url.replace(/_normal/, ''));         
 };
 
-var createTweet = function (tweet) {
+var createTweet = function (twitter_handle, tweet) {
   var span = $('<span/>');
   
   span.attr('data-sentiment', JSON.stringify(tweet.sentiment));
@@ -20,11 +20,11 @@ var createTweet = function (tweet) {
   var text = twttr.txt.autoLink(tweet.text);
   span.html(text);
   span.append('<div class="date">' + moment(tweet.created_at).format('MMMM Do YYYY, h:mm a') + '</div>')
-
+  span.append('<a href="https://twitter.com/' + twitter_handle + '/status/' + tweet.id +'" class="view-tweet">details</a>');
   return span;
 };
 
-var setTweets = function (selector, data) {
+var setTweets = function (selector, twitter_handle, data) {
    var $container = $(selector);
    $('.tweet', $container).remove();
 
@@ -33,7 +33,7 @@ var setTweets = function (selector, data) {
       var s = tweet.sentiment;
       var score = s.score || 'neutral';
       var li = $('<li class="tweet ' + s.type +'"></li>');
-      li.append(createTweet(tweet));
+      li.append(createTweet(twitter_handle, tweet));
 
       $container.append(li);
    }
@@ -127,8 +127,8 @@ var populateData = function (data) {
    setTopics(data.topics);
    setScore(data.scored.overallScore);
    setUser(data.user);
-   setTweets('.positive ul', data.scored.positiveInfluencers);
-   setTweets('.negative ul', data.scored.negativeInfluencers);
+   setTweets('.positive ul', data.user.screen_name, data.scored.positiveInfluencers);
+   setTweets('.negative ul', data.user.screen_name, data.scored.negativeInfluencers);
    createChart(data.history);
    createBubble(data.bubble);
 };
