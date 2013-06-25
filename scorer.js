@@ -44,6 +44,44 @@ methods['score'] = function (args) {
    });
 };
 
+methods['tweets'] = function (args) {
+   var twitter_handle = args[0];
+   
+   getTweets(twitter_handle, function (err, tweets) {
+      if (err) {
+         console.log(err);
+         return process.exit(1);
+      }
+      
+      console.log(JSON.stringify(tweets));
+
+      return process.exit(0);
+   });
+};
+
+methods['sentiment'] = function (args) {
+   var twitter_handle = args[0];
+   
+   var analyzeTweets = function (err, tweets) {
+      if (err) {
+         console.log(err);
+         return process.exit(1);
+      }
+
+      require('./worker/lib/sentiment').analyzeTweets(tweets, function (err, data) {
+         console.log(JSON.stringify(data));
+         return process.exit(0);
+      });  
+   }
+
+   if (twitter_handle.match(/.json$/i)) {
+      return analyzeTweets(null, require('./' + twitter_handle));
+   }
+   else {
+      return getTweets(twitter_handle, analyzeTweets);  
+   }
+};
+
 methods['details'] = function () {
    console.log('One of score or history');
    return process.exit(0);

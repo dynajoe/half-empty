@@ -1,6 +1,6 @@
 var request = require('request')
   , twitter = require('./lib/twitter')
-  , alchemy = require('./lib/alchemy');
+  , analyzer = require('./analyzer');
 
 console.log('Process Arguments: ', process.argv);
 console.log('Scoring Worker');
@@ -20,10 +20,10 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
    var twitter_handle = payload.handle.toLowerCase().trim();
    
    twitter.getTweets(payload, function(err, data) {
-      if(err) {
+      if (err) {
          if (err.statusCode == 404) {
             twitterCache.put(twitter_handle, 'null', function(err, msg) {
-               if(err) {
+               if (err) {
                   console.error('Failed to put to cache. ', err);
                   process.exit(1);
                }
@@ -38,14 +38,14 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
          return;
       }
       console.log('Retrieved ' + data.tweets.length + ' tweets for user ' + twitter_handle);
-      alchemy.analyzeTweets(data.tweets, function(err, analyzedTweets) {
-         if(err) {
+      analyzer.analyze(data.tweets, payload.analyzer || 'alchemy', function(err, analyzedTweets) {
+         if (err) {
             console.error('Failed to analyze tweets for user: ' + twitter_handle, err, payload);
             process.exit(1);
          }
          console.log('Analyzed ' + analyzedTweets.length + ' tweets for user ' + twitter_handle);
          twitterCache.put(twitter_handle, JSON.stringify(data), function(err, msg) {
-            if(err) {
+            if (err) {
                console.error('Failed to put to cache. ', err, payload);
                process.exit(1);
             }
