@@ -44,6 +44,7 @@ require('./lib/payload_parser').parse_payload(process.argv, function (payload) {
             process.exit(1);
          }
          console.log('Analyzed ' + analyzedTweets.length + ' tweets for user ' + twitter_handle);
+         data.tweets = analyzedTweets;
          twitterCache.put(twitter_handle, JSON.stringify(data), function(err, msg) {
             if (err) {
                console.error('Failed to put to cache. ', err, payload);

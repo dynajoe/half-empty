@@ -8,7 +8,6 @@ var request = require('request')
 */
 
 module.exports.analyzeTweets = function(tweets, cb) {
-   console.log(tweets[0]);
    request.post('http://www.sentiment140.com/api/bulkClassifyJson', { 
       headers: {
          "Content-Type": "application/json"

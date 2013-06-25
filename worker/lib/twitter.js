@@ -18,8 +18,9 @@ function getModifiedTweet(tweet) {
       retweet_count: tweet.retweet_count,
       favorite_count: tweet.favorite_count,
       text: tweet.text,
-
+      sentiment: tweet.sentiment || {}
    };
+
    if (tweet.retweeted_status) {
       modifiedTweet.retweeted_status = {
          id: tweet.retweeted_status.id_str,

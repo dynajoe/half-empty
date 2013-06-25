@@ -255,6 +255,8 @@ function getReach(tweet) {
 
 function getSentimentScore(tweet) {
    if (!tweet.sentiment) log(JSON.stringify(tweet, null, 2));
+   console.log(tweet);
+   tweet.sentiment = tweet.sentiment || {};
    if (tweet.sentiment.type === 'neutral') return 0;
    return parseFloat(tweet.sentiment.score);
 }
