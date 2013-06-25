@@ -306,7 +306,7 @@ var loadUser = function (twitter_handle) {
    };
 
    var getData = function () {   
-      $.get('/analyze/' + twitter_handle, function (data) {
+      $.get('/analyze/' + twitter_handle + "?analyzer=" + window.analyzer, function (data) {
          if (data.processing) {
             checkTask(data.id);
          } else {
@@ -324,6 +324,8 @@ $(document).ready(function () {
          hideData();
       }
    });
+   
+   window.analyzer = 'alchemy';
 
    $('#start-over a').click(function (e) {
       e.preventDefault();

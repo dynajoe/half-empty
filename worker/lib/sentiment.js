@@ -22,8 +22,8 @@ module.exports.analyzeTweets = function(tweets, cb) {
       if (err || !body) {
          return cb('unable to analyze tweets');
       }
-
-      _.each(body.data, function (t) {
+      
+      body.data.forEach(function (t) {
          t.sentiment = t.sentiment || {};
 
          switch (t.polarity) {

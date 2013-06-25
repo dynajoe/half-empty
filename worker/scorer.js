@@ -1,6 +1,6 @@
 var request = require('request')
   , twitter = require('./lib/twitter')
-  , analyzer = require('./analyzer');
+  , analyzer = require('./lib/analyzer');
 
 console.log('Process Arguments: ', process.argv);
 console.log('Scoring Worker');

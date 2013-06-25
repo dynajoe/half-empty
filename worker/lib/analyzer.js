@@ -1,5 +1,5 @@
-var alchemy = require('./lib/alchemy');
-var sentiment = require('./lib/sentiment');
+var alchemy = require('./alchemy');
+var sentiment = require('./sentiment');
 
 module.exports.analyze = function (tweets, api, callback) {
    
@@ -9,5 +9,5 @@ module.exports.analyze = function (tweets, api, callback) {
       analyzer = sentiment;
    }
 
-   analyzer.analyzeTweets(data.tweets, callback);
+   analyzer.analyzeTweets(tweets, callback);
 };

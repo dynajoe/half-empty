@@ -17,12 +17,13 @@ var cleanTopicText = function (topics) {
    return _.sortBy(topics, function (t) { return t.text; });
 };
 
-var submitWorker = function (twitter_handle, user, callback) {
+var submitWorker = function (twitter_handle, analyzer, user, callback) {
    user = user || { name: 'Half Empty Anonymous User' };
 
    var payload = { 
       id: new Date().getTime(),
       handle: twitter_handle,
+      analyzer: analyzer,
       requested_by: user.name,
       iron_project: config.IRON_PROJECT,
       iron_token: config.IRON_TOKEN, 
@@ -54,7 +55,8 @@ module.exports = function (app) {
       res.setHeader('Content-Type', 'application/json');
                
       var twitter_handle = req.params.handle;
-      
+      var analyzer = req.query.analyzer || 'alchemy';
+
       if (!twitter_handle) {
          res.writeHead(400);
          return res.end('A twitter handle is required.');
@@ -111,7 +113,7 @@ module.exports = function (app) {
             }
          }
          else {
-            submitWorker(twitter_handle, req.user, function (err, id) {
+            submitWorker(twitter_handle, analyzer, req.user, function (err, id) {
                res.end(JSON.stringify({ processing: true, id: id, err: err }));
             });
          }
